@@ -21,7 +21,12 @@ sequelize.sync({ force: false });
 const app = express();
 const router = require('./routes');
 
-app.use(cors());
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production'
+  ? ['https://timo-six.vercel.app']
+  : ['http://localhost:8080', 'http://localhost:3000'],
+  credentials: true
+}));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
