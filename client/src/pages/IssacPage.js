@@ -34,6 +34,9 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: 30,
+    border: '3px solid #B8DAD9',
+    borderRadius: 16,
+    padding: '23px 25px',
   },
 
   sectionTitle: {
@@ -55,6 +58,26 @@ const useStyles = makeStyles((theme) => ({
   lectureList: {
     maxHeight: '400px',
     overflowY: 'auto',
+    backgroundColor: '#F5F5F5',
+    borderRadius: '12px',
+    padding: '15px',
+    '& > div:last-child': {
+      marginBottom: 0,
+    },
+    '&::-webkit-scrollbar': {
+      width: '8px',
+    },
+    '&::-webkit-scrollbar-track': {
+      backgroundColor: '#E8E8E8',
+      borderRadius: '10px',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: '#B8DAD9',
+      borderRadius: '10px',
+      '&:hover': {
+        backgroundColor: '#1A8986',
+      },
+    },
   },
 
   noticeText: {
@@ -70,45 +93,45 @@ const useStyles = makeStyles((theme) => ({
   },
 
   timeSlotCard: {
-    backgroundColor: 'white',
-    padding: '20px',
+    backgroundColor: '#FAFAFA',
+    padding: '18px 20px',
     borderRadius: '15px',
-    border: '1px solid #eaedf1',
+    border: '2px solid #E8F4F3',
     marginBottom: '15px',
-  },
-
-  timeSlotHeader: {
     display: 'flex',
     alignItems: 'center',
-    marginBottom: 15,
+    gap: 20,
   },
 
   timeSlotBadge: {
     backgroundColor: '#1A8986',
     color: '#FAFAFA',
-    borderRadius: '50%',
-    width: 40,
-    height: 40,
+    borderRadius: '25px',
+    padding: '10px 20px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    fontFamily: 'Lato',
     fontWeight: 700,
-    marginRight: 15,
+    fontSize: 16,
+    whiteSpace: 'nowrap',
+    minWidth: '120px',
   },
 
-  timeSlotTitle: {
-    fontSize: 18,
-    fontWeight: 600,
+  timeSlotContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 6,
   },
 
   timeSlotInfo: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 8,
+    fontSize: 15,
+    color: '#333333',
+    fontWeight: 500,
   },
 
   timeSlotNotice: {
-    fontSize: 14,
+    fontSize: 15,
     color: '#1A8986',
     fontWeight: 600,
   },
@@ -187,20 +210,17 @@ export default function IssacPage() {
           <Typography className={classes.sectionTitle}>취소 시간별 알림 시간</Typography>
           {TIME_SLOTS.map((slot, index) => (
             <Box key={index} className={classes.timeSlotCard}>
-              <Box className={classes.timeSlotHeader}>
-                <Box className={classes.timeSlotBadge}>
-                  <Typography>{slot.round}</Typography>
-                </Box>
-                <Typography className={classes.timeSlotTitle}>
-                  {slot.number}
+              <Box className={classes.timeSlotBadge}>
+                <Typography>{slot.round} ({slot.number})</Typography>
+              </Box>
+              <Box className={classes.timeSlotContent}>
+                <Typography className={classes.timeSlotInfo}>
+                  {slot.period} 사이 취소
+                </Typography>
+                <Typography className={classes.timeSlotNotice}>
+                  → {slot.openTime} | 🔔 {slot.alertTime}
                 </Typography>
               </Box>
-              <Typography className={classes.timeSlotInfo}>
-                전일 {slot.period} 사이 취소
-              </Typography>
-              <Typography className={classes.timeSlotNotice}>
-                → {slot.openTime} | 🔔 {slot.alertTime}
-              </Typography>
             </Box>
           ))}
         </Box>
@@ -211,7 +231,7 @@ export default function IssacPage() {
           <Box>
             <Typography className={classes.sectionTitle}>신청 과목 선택</Typography>
             <Typography className={classes.noticeText}>
-              * 대표시간표 기준으로 지연제 신청할 과목을 선택합니다.
+              * 대표시간표 기준으로 빈자리 알림을 신청할 수 있습니다.
             </Typography>
             <Box className={classes.lectureList}>
               {availableLectures.length > 0 ? (
@@ -235,7 +255,7 @@ export default function IssacPage() {
               )}
             </Box>
             <Typography className={classes.warningText}>
-              ⚠️ 서버 시간 차이로 인한 빠른 재고가 오픈될 수 있습니다.
+              ⚠️ 서버 시간 차이로 인한 빈 자릿수 오차가 있을 수 있습니다.
             </Typography>
           </Box>
 

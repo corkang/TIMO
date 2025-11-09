@@ -35,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'left',
+    alignItems: 'baseline',
     marginBottom: '2.5px',
   },
 
@@ -42,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'left',
-    // marginBottom: '3px',
+    marginBottom: '8px',
   },
 
   title: {
@@ -95,7 +96,7 @@ const useStyles = makeStyles((theme) => ({
   buttonBox: {
     display: 'flex',
     marginLeft: 'auto',
-    alignItems: 'start',
+    alignItems: 'center',
   },
 
   textButton: {
@@ -104,8 +105,8 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 10,
     fontFamily: 'Lato',
     fontWeight: 700,
-    fontSize: 16,
-    padding: '3px',
+    fontSize: 14,
+    padding: '8px 12px',
     margin: '12px 10px',
     
     '&:hover': {
@@ -121,7 +122,6 @@ const useStyles = makeStyles((theme) => ({
     fontFamily: 'Lato',
     fontWeight: 700,
     fontSize: 20,
-    paddingTop: '13px',
   },
 
   lecProf: {
@@ -153,7 +153,7 @@ const useStyles = makeStyles((theme) => ({
     transform: 'translateY(-50%)',
     fontFamily: 'Lato',
     fontWeight: 700,
-    fontSize: 20,
+    fontSize: 16,
     color: '#D92929',
   },
 
@@ -294,17 +294,17 @@ export default function LectureCard({
             {renderCategoryTags()}
           </Box>
           <Box className={classes.row}>
-            <Box className={classes.lecNameWithProf}>
-              <Typography variant="h3" className={`${classes.blckText} ${classes.lecName}`}>
-                {lecture.name}
-              </Typography>
-              <Typography className={classes.lecCode}>
-                {lecture.code}
-              </Typography>
-              <Typography className={classes.lecProf}>
-                {lecture.professor}
-              </Typography>
-            </Box>
+            <Typography variant="h3" className={`${classes.item} ${classes.blckText} ${classes.lecName}`}>
+              {lecture.name}
+            </Typography>
+            <Typography className={classes.lecCode}>
+              {lecture.code}
+            </Typography>
+          </Box>
+          <Box className={classes.row}>
+            <Typography className={`${classes.item} ${classes.lecProf}`}>
+              {lecture.professor}
+            </Typography>
           </Box>
           <Box className={classes.row}>
             <Typography>{lecture.period.replace(',', '/')}</Typography>

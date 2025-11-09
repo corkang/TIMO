@@ -55,11 +55,21 @@ const useStyles = makeStyles((theme) => ({
   },
 
   sortDropdown: {
-    minWidth: 150,
+    minWidth: 200,
     '& .MuiSelect-root': {
-      padding: '8px 12px',
+      padding: '10px 16px',
       fontFamily: 'Lato',
       fontSize: 14,
+    },
+    '& .MuiOutlinedInput-notchedOutline': {
+      borderColor: '#B8DAD9',
+      borderWidth: 2,
+    },
+    '&:hover .MuiOutlinedInput-notchedOutline': {
+      borderColor: '#1A8986',
+    },
+    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+      borderColor: '#1A8986',
     },
   },
 
@@ -75,6 +85,26 @@ const useStyles = makeStyles((theme) => ({
     gap: 10,
     maxHeight: 'calc(100vh - 300px)',
     overflowY: 'auto',
+    backgroundColor: '#F5F5F5',
+    borderRadius: '12px',
+    padding: '15px',
+    '& > div:last-child': {
+      marginBottom: 0,
+    },
+    '&::-webkit-scrollbar': {
+      width: '8px',
+    },
+    '&::-webkit-scrollbar-track': {
+      backgroundColor: '#E8E8E8',
+      borderRadius: '10px',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: '#B8DAD9',
+      borderRadius: '10px',
+      '&:hover': {
+        backgroundColor: '#1A8986',
+      },
+    },
   },
 }));
 

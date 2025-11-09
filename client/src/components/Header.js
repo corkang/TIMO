@@ -33,6 +33,9 @@ const useStyles = makeStyles((theme) => ({
   icon: {
     marginRight: 3,
     width: 200,
+    [theme.breakpoints.down('sm')]: {
+      width: 100,
+    },
   },
 
   title: {
@@ -46,6 +49,9 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 15,
     fontWeight: 600,
     fontSize: 14,
+    [theme.breakpoints.down('sm')]: {
+      display: 'none', // 모바일에서 숨김
+    },
   },
 
   navbar: {
@@ -55,6 +61,13 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     gap: 48,
     alignItems: 'center',
+    [theme.breakpoints.down('sm')]: {
+      position: 'relative',
+      left: 'auto',
+      transform: 'none',
+      gap: 16,
+      marginRight: 8,
+    },
   },
 
   navItem: {
@@ -80,6 +93,13 @@ const useStyles = makeStyles((theme) => ({
     '&:hover::after': {
       backgroundColor: '#DDEDED',
     },
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 12,
+      padding: '4px 0',
+      '&::after': {
+        height: 2,
+      },
+    },
   },
 
   navItemActive: {
@@ -98,6 +118,12 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 16,
     '&:hover': {
       backgroundColor: '#156E6B'
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: 65,
+      fontSize: 12,
+      minWidth: 'unset',
+      padding: '6px 8px',
     },
   },
 }));

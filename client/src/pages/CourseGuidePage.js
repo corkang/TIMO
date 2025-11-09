@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Typography, List, ListItem, makeStyles } from '@material-ui/core';
+import { Box, Typography, List, ListItem, Select, MenuItem, makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,6 +26,11 @@ const useStyles = makeStyles((theme) => ({
     border: '3px solid #B8DAD9',
     borderRadius: 16,
     padding: '23px 25px',
+    [theme.breakpoints.down('sm')]: {
+      flex: '0 0 100%',
+      border: 'none',
+      padding: '0 0 20px 0',
+    },
   },
 
   rightSection: {
@@ -36,6 +41,10 @@ const useStyles = makeStyles((theme) => ({
     border: '3px solid #B8DAD9',
     borderRadius: 16,
     padding: '23px 25px',
+    height: 'fit-content',
+    [theme.breakpoints.down('sm')]: {
+      flex: '0 0 100%',
+    },
   },
 
   sectionTitle: {
@@ -46,10 +55,26 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 20,
   },
 
+  // 모바일 드롭다운
+  departmentDropdown: {
+    width: '100%',
+    marginBottom: 15,
+    [theme.breakpoints.up('md')]: {
+      display: 'none', // 데스크톱에서는 숨김
+    },
+    '& .MuiSelect-root': {
+      padding: '12px 16px',
+      fontFamily: 'Lato',
+      fontSize: 16,
+    },
+  },
+
+  // 데스크톱 리스트
   departmentList: {
     padding: 0,
-    maxHeight: 'calc(100vh - 300px)',
-    overflowY: 'auto',
+    [theme.breakpoints.down('sm')]: {
+      display: 'none', // 모바일에서는 숨김
+    },
   },
 
   departmentItem: {
@@ -80,17 +105,20 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    minHeight: '600px',
     backgroundColor: '#F5F5F5',
     borderRadius: '10px',
     overflow: 'hidden',
+    height: '100%',
   },
 
   pdfIframe: {
     width: '100%',
-    height: '700px',
+    height: '800px',
     border: 'none',
     borderRadius: '10px',
+    [theme.breakpoints.down('sm')]: {
+      height: '600px',
+    },
   },
 
   placeholderText: {
@@ -156,6 +184,29 @@ export default function CourseGuidePage() {
         {/* Left Section: Department Selection */}
         <Box className={classes.leftSection}>
           <Typography className={classes.sectionTitle}>학부별 수강편람 (2025년 2학기)</Typography>
+          
+          {/* 모바일 드롭다운 */}
+          <Select
+            value={selectedDepartment?.id || ''}
+            onChange={(e) => {
+              const dept = DEPARTMENTS.find(d => d.id === e.target.value);
+              setSelectedDepartment(dept);
+            }}
+            displayEmpty
+            className={classes.departmentDropdown}
+            variant="outlined"
+          >
+            <MenuItem value="" disabled>
+              학부를 선택하세요
+            </MenuItem>
+            {DEPARTMENTS.map((dept) => (
+              <MenuItem key={dept.id} value={dept.id}>
+                {dept.name} {dept.subtitle}
+              </MenuItem>
+            ))}
+          </Select>
+
+          {/* 데스크톱 리스트 */}
           <List className={classes.departmentList}>
             {DEPARTMENTS.map((dept) => (
               <ListItem
