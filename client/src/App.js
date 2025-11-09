@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Route, Switch, Redirect, useHistory, useLocation } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { Box, makeStyles } from '@material-ui/core';
 
@@ -17,6 +17,8 @@ import theme from './theme';
 import { useAuth, useModal } from './hooks';
 import { MODAL_ACTIONS } from './commons/constants';
 import { User } from './models';
+import { storage } from './utils/storage';
+import { STORAGE_KEY } from './commons/constants';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -31,6 +33,35 @@ const useStyles = makeStyles(() => ({
     backgroundColor: '#FAFAFA',
   },
 }));
+
+/**
+ * TokenHandler processes OAuth token from URL parameter
+ */
+function TokenHandler() {
+  const location = useLocation();
+  const history = useHistory();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const token = params.get('token');
+    
+    if (token) {
+      // Save token to localStorage
+      storage.set(STORAGE_KEY.ACCESS_TOKEN, token);
+      
+      // Remove token from URL
+      params.delete('token');
+      const newSearch = params.toString();
+      const newUrl = `${location.pathname}${newSearch ? `?${newSearch}` : ''}`;
+      history.replace(newUrl);
+      
+      // Force page reload to trigger authentication
+      window.location.reload();
+    }
+  }, [location, history]);
+
+  return null;
+}
 
 /**
  * AuthenticatedLayout wraps authenticated pages with common Header and provides shared handlers.
@@ -72,6 +103,7 @@ export default function App() {
     <div className="App">
       <ThemeProvider theme={theme}>
         <Router>
+          <TokenHandler />
           <Switch>
             <Route
               exact

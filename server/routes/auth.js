@@ -18,11 +18,12 @@ router.get(
   passport.authenticate('google', { failureRedirect: '/auth', session: false }),
   function (req, res) {
     const accessToken = JWT.sign({ userId: req.user.id }, process.env.JWT_SECRET);
-    res.cookie('accessToken', accessToken, {
-      httpOnly: false,  // 클라이언트에서 읽을 수 있도록
-      secure: process.env.NODE_ENV === 'production',  // HTTPS only in production
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',  // Cross-origin 허용
-    }).redirect(process.env.GOOGLE_REDIRECT_URL);
+    
+    // Cross-domain 쿠키 문제 해결: URL 파라미터로 토큰 전달
+    const redirectUrl = new URL(process.env.GOOGLE_REDIRECT_URL);
+    redirectUrl.searchParams.set('token', accessToken);
+    
+    res.redirect(redirectUrl.toString());
   },
 );
 
