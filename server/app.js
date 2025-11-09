@@ -21,6 +21,10 @@ sequelize.sync({ force: false });
 const app = express();
 const router = require('./routes');
 
+// Trust Railway proxy to correctly identify HTTPS requests
+// Railway uses X-Forwarded-Proto header to indicate original protocol
+app.set('trust proxy', 1);
+
 app.use(cors({
   origin: process.env.NODE_ENV === 'production'
   ? ['https://timo-six.vercel.app']
