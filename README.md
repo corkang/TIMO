@@ -28,3 +28,6 @@
 >* 🎛️ BACKEND | 
 <img src="https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=Node.js&logoColor=white"/> <img src="https://img.shields.io/badge/Express-000000?style=flat-square&logo=Express&logoColor=white"/> <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=MySQL&logoColor=white"/> <img src="https://img.shields.io/badge/Selenium-43B02A?style=flat-square&logo=Selenium&logoColor=white"/>
 
+## 🎬 Credits
+티모는 2022년 서비스되었던 [대학시간](https://github.com/handong-life/college-timetable) 프로젝트를 기반으로 리뉴얼되었습니다.
+
