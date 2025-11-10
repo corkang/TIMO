@@ -43,34 +43,26 @@ export default function NewSemesterModal({ open, onClose }) {
     <Modal className={classes.root} open={open} onClose={onClose}>
       <Paper className={classes.modal}>
         <Typography className={classes.titleText} variant="h3">
-          2022년도 1학기 서비스 안내{' '}
+          2025년도 2학기 서비스 안내{' '}
           <span role="img" aria-label="icon">
             🚀
           </span>
         </Typography>
         <Typography className={classes.bodyText} variant="body1">
           재학생 여러분 안녕하세요~!
-          <br />한 학기가 정말 빠르게 흘러갔네요
+          <br />
           <span role="img" aria-label="icon">
             🤪
           </span>
           <br />
           <br />
-          조금씩 다음 학기를 준비할 여러분을 위해
+          다가오는 새 학기를 준비하는 여러분을 위해,
           <br />
-          1학기에도 대학시간을 서비스 하게 되었습니다!
-          <br />
-          <br />
-          이삭줍기 서비스도 수강 신청이 시작되면
-          <br />
-          지난학기와 동일하게 진행될 예정입니다.
-          <span role="img" aria-label="icon">
-            🌾
-          </span>
-          <br />
-          <br />
-          그럼 수강신청 스트레스가 덜한
-          <br /> 행복한 방학이 되길 <strong>대학시간</strong>이 응원하겠습니다!
+          수강신청 도우미 TimO가 새롭게 시작됩니다!<br /><br />
+          장바구니 경쟁률부터 수강신청 지연제 알림까지<br />
+          다양한 기능들이 여러분의 수강신청을 도와드립니다.<br />
+          성공적인 수강신청,
+          <br /><strong>Timo</strong>가 함께하겠습니다!
           <span role="img" aria-label="icon">
             ☘️
           </span>
