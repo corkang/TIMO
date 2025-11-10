@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
   },
   owner: {
     fontWeight: 700,
-    color: '#02ccf2',
+    color: '#1B8986',
   },
 }));
 
@@ -24,7 +24,7 @@ export default function Footer() {
   return (
     <div className={classes.footer}>
       Copyright ⓒ 2025.&nbsp;
-      <a className={classes.owner} href="https://github.com/handong-life/">
+      <a className={classes.owner} href="https://github.com/corkang/TIMO">
         Timo
       </a>
       .&nbsp;All Rights Reserved.
