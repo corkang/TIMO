@@ -1,0 +1,44 @@
+require('dotenv').config();
+
+const express = require('express');
+const path = require('path');
+const cors = require('cors');
+const logger = require('morgan');
+const passport = require('passport');
+const { sequelize } = require('./models');
+const passportConfig = require('./lib/passport');
+const { errorMiddleware } = require('./middlewares/error');
+
+sequelize
+  .authenticate()
+  .then(() => console.log('🚀Connection Created!'))
+  .catch((err) => {
+    console.log(err);
+  });
+
+sequelize.sync({ force: false });
+
+const app = express();
+const router = require('./routes');
+
+// Trust Railway proxy to correctly identify HTTPS requests
+// Railway uses X-Forwarded-Proto header to indicate original protocol
+app.set('trust proxy', 1);
+
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production'
+  ? ['https://timo-six.vercel.app']
+  : ['http://localhost:8080', 'http://localhost:3000'],
+  credentials: true
+}));
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, '../client/build')));
+app.use(passport.initialize());
+passportConfig();
+app.use('/api', router);
+app.use((req, res) => res.sendFile(path.join(__dirname, '../client/build/index.html')));
+app.use(errorMiddleware);
+
+module.exports = app;
