@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Route, Switch, Redirect, useHistory, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Route, Switch, Redirect, useLocation } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { Box, makeStyles } from '@material-ui/core';
 
@@ -35,32 +35,34 @@ const useStyles = makeStyles(() => ({
 }));
 
 /**
- * TokenHandler processes OAuth token from URL parameter
+ * useTokenHandler - processes OAuth token from URL parameter
+ * Returns true if token is being processed (to prevent premature redirects)
  */
-function TokenHandler() {
+function useTokenHandler() {
   const location = useLocation();
-  const history = useHistory();
+  const [isProcessing] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.has('token');
+  });
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const token = params.get('token');
-    
+
     if (token) {
       // Save token to localStorage
       storage.set(STORAGE_KEY.ACCESS_TOKEN, token);
-      
-      // Remove token from URL
+
+      // Remove token from URL and reload
       params.delete('token');
       const newSearch = params.toString();
       const newUrl = `${location.pathname}${newSearch ? `?${newSearch}` : ''}`;
-      history.replace(newUrl);
-      
-      // Force page reload to trigger authentication
+      window.history.replaceState({}, '', newUrl);
       window.location.reload();
     }
-  }, [location, history]);
+  }, [location]);
 
-  return null;
+  return isProcessing;
 }
 
 /**
@@ -96,15 +98,17 @@ function AuthenticatedLayout({ children, logout }) {
   );
 }
 
-export default function App() {
+function AppRoutes() {
   const [authenticated, logout] = useAuth();
+  const isProcessingToken = useTokenHandler();
+
+  // While processing token, don't render routes to prevent redirect to login
+  if (isProcessingToken) {
+    return null;
+  }
 
   return (
-    <div className="App">
-      <ThemeProvider theme={theme}>
-        <Router>
-          <TokenHandler />
-          <Switch>
+    <Switch>
             <Route
               exact
               path="/login"
@@ -169,9 +173,18 @@ export default function App() {
               }}
             />
 
-            <Route path="/share/:id" component={SharePage} />
-            <Route component={NotFoundPage} />
-          </Switch>
+      <Route path="/share/:id" component={SharePage} />
+      <Route component={NotFoundPage} />
+    </Switch>
+  );
+}
+
+export default function App() {
+  return (
+    <div className="App">
+      <ThemeProvider theme={theme}>
+        <Router>
+          <AppRoutes />
         </Router>
       </ThemeProvider>
     </div>
