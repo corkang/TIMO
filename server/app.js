@@ -27,7 +27,7 @@ app.set('trust proxy', 1);
 
 app.use(cors({
   origin: process.env.NODE_ENV === 'production'
-  ? ['https://timo-six.vercel.app']
+  ? ['https://timo.handong.site', 'https://timo-six.vercel.app']
   : ['http://localhost:8080', 'http://localhost:3000'],
   credentials: true
 }));
