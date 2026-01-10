@@ -6,6 +6,7 @@ const authRouter = require('./auth');
 const shareRouter = require('./share');
 const userRouter = require('./user');
 const timetableRouter = require('./timetable');
+const reviewRouter = require('./review');
 const searchController = require('../controllers/search');
 
 router.use('/auth', authRouter);
@@ -16,5 +17,6 @@ router.use(isValidJwtToken);
 router.get('/search', searchController.getSearchResults);
 router.use('/timetable', timetableRouter);
 router.use('/user', userRouter);
+router.use('/review', reviewRouter);
 
 module.exports = router;
