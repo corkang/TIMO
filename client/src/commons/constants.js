@@ -62,3 +62,100 @@ export const MODAL_ACTIONS = {
   OPEN_FEEDBACK_MODAL: 'openFeedbackModal',
   OPEN_SUBMIT_CONFIRM_MODAL: 'openSubmitConfirmModal',
 };
+
+// 강의평 관련 상수
+export const REVIEW_ACTIONS = {
+  SET_MY_COURSES: 'setMyCourses',
+  SET_SEARCH_RESULTS: 'setSearchResults',
+  SET_SEARCH_QUERY: 'setSearchQuery',
+  SELECT_COURSE: 'selectCourse',
+  SET_REVIEWS: 'setReviews',
+  ADD_REVIEW: 'addReview',
+  UPDATE_REVIEW: 'updateReview',
+  DELETE_REVIEW: 'deleteReview',
+  TOGGLE_LIKE: 'toggleLike',
+  SET_SORT: 'setSort',
+  SET_LOADING: 'setLoading',
+  CLEAR_SELECTION: 'clearSelection',
+};
+
+// 평가 항목 옵션
+export const REVIEW_CRITERIA = {
+  grading: ['generous', 'normal', 'tight', 'survival'],
+  difficulty: ['easy', 'low', 'mid', 'normal', 'hard'],
+  exams: ['none', 'normal', 'hard'],
+  assignments: ['none', 'normal', 'heavy'],
+  teamProjects: ['none', 'normal', 'heavy'],
+  onlineOfflineRatio: ['offline', 'half', 'online'],
+  teachingMethod: ['theory', 'discussion', 'project'],
+};
+
+// 평가 항목 한글 라벨
+export const REVIEW_LABELS = {
+  grading: {
+    generous: '너그러움',
+    normal: '보통',
+    tight: '깐깐함',
+    survival: '생존',
+  },
+  difficulty: {
+    easy: '쉬움',
+    low: '1~2점',
+    mid: '3점 이상',
+    normal: '보통',
+    hard: '어려움',
+  },
+  exams: {
+    none: '없음',
+    normal: '보통',
+    hard: '어려움',
+  },
+  assignments: {
+    none: '없음',
+    normal: '보통',
+    heavy: '많음',
+  },
+  teamProjects: {
+    none: '없음',
+    normal: '보통',
+    heavy: '많음',
+  },
+  onlineOfflineRatio: {
+    offline: '100% 오프라인',
+    half: '50% 반반',
+    online: '100% 온라인',
+  },
+  teachingMethod: {
+    theory: '이론 중심',
+    discussion: '토론 중심',
+    project: '프로젝트 중심',
+  },
+};
+
+// 학기 옵션 생성 (최근 4학기)
+export const SEMESTER_OPTIONS = (() => {
+  const now = new Date();
+  const year = now.getFullYear() % 100;
+  const month = now.getMonth() + 1;
+  const currentSemester = month >= 7 ? 2 : 1;
+  const options = [];
+
+  for (let i = 0; i < 4; i++) {
+    let y = year;
+    let s = currentSemester;
+    s -= i;
+    while (s <= 0) {
+      s += 2;
+      y -= 1;
+    }
+    options.push(`${y}-${s}`);
+  }
+  return options;
+})();
+
+// 정렬 옵션
+export const REVIEW_SORT_OPTIONS = [
+  { value: 'latest', label: '최신순' },
+  { value: 'likes', label: '좋아요순' },
+  { value: 'rating', label: '별점순' },
+];

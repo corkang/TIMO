@@ -141,6 +141,7 @@ export default function Header({ logout, openReportFeedbackModal, isSharePage })
     { label: '시간표', path: '/timetable' },
     { label: '지연제', path: '/issac' },
     { label: '경쟁률', path: '/cart' },
+    { label: '강의평', path: '/review' },
     { label: '수강편람', path: '/courseguide' },
   ];
 
@@ -161,10 +162,10 @@ export default function Header({ logout, openReportFeedbackModal, isSharePage })
           <img className={classes.icon} alt="티모 로고" src="/timo_logo.svg" />
         </a>
         {/* <Typography className={classes.title}>한동대</Typography> */}
-        <Typography className={classes.information}>
+        {/* <Typography className={classes.information}>
           {process.env.REACT_APP_HANDONG_ALERT_MESSAGE ||
             (lastCrawledAt ? `개설과목 업데이트: ${lastCrawledAt}` : '')}
-        </Typography>
+        </Typography> */}
       </Box>
       {!isSharePage ? (
         <>

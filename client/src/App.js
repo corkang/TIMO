@@ -3,14 +3,15 @@ import { BrowserRouter as Router, Route, Switch, Redirect, useLocation } from 'r
 import { ThemeProvider } from '@material-ui/core/styles';
 import { Box, makeStyles } from '@material-ui/core';
 
-import { 
-  TimeTablePage, 
-  IssacPage, 
-  CartPage, 
-  CourseGuidePage, 
-  SharePage, 
-  NotFoundPage, 
-  LoginPage 
+import {
+  TimeTablePage,
+  IssacPage,
+  CartPage,
+  CourseGuidePage,
+  SharePage,
+  NotFoundPage,
+  LoginPage,
+  ReviewPage,
 } from './pages';
 import { Header, Modal } from './components';
 import theme from './theme';
@@ -168,6 +169,19 @@ function AppRoutes() {
                 return (
                   <AuthenticatedLayout logout={logout}>
                     <CourseGuidePage />
+                  </AuthenticatedLayout>
+                );
+              }}
+            />
+
+            <Route
+              exact
+              path="/review"
+              render={() => {
+                if (!authenticated) return <Redirect to="/login" />;
+                return (
+                  <AuthenticatedLayout logout={logout}>
+                    <ReviewPage />
                   </AuthenticatedLayout>
                 );
               }}
