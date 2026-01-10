@@ -6,3 +6,4 @@ export { default as TimeTablePage } from './TimeTablePage';
 export { default as IssacPage } from './IssacPage';
 export { default as CartPage } from './CartPage';
 export { default as CourseGuidePage } from './CourseGuidePage';
+export { default as ReviewPage } from './ReviewPage';

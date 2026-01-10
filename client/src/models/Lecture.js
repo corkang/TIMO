@@ -24,8 +24,10 @@ export default class Lecture {
     this.isAdded = false;
   }
 
-  static getSearchResults = async (search, page) =>
-    await Axios().get(`/search?search=${search}${page ? `&page=${page}` : ''}`);
+  static getSearchResults = async (search, page, limit = 20) =>
+    await Axios().get(
+      `/search?search=${search}${page ? `&page=${page}` : ''}&limit=${limit}`,
+    );
 }
 
 export class BookmarkedLecture extends Lecture {

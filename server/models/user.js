@@ -25,6 +25,10 @@ class User extends Model {
       foreignKey: 'userId',
       targetKey: 'id',
     });
+    this.hasMany(models.courseReview, {
+      foreignKey: 'userId',
+      as: 'reviews',
+    });
   }
 }
 
