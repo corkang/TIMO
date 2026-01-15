@@ -10,6 +10,10 @@ const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_CALLBACK_URL } = process.
 
 // Force HTTPS for production callback URL
 const getCallbackURL = () => {
+  if (process.env.NODE_ENV !== 'production') {
+    return `http://localhost:${process.env.PORT || 3000}/auth/google/callback`;
+  }
+
   if (!GOOGLE_CALLBACK_URL) return undefined;
   // Railway의 RAILWAY_PUBLIC_DOMAIN이 http를 반환할 수 있으므로 강제로 https 적용
   if (process.env.NODE_ENV === 'production' && GOOGLE_CALLBACK_URL.startsWith('http://')) {
@@ -35,7 +39,7 @@ module.exports = () => {
             const user = await User.create({
               email: profile.emails[0].value,
             });
-            await Timetable.create({ userId: user.id, title: '예비시간표1' });
+            await Timetable.create({ userId: user.id, title: '1안(대표)' });
             return next(null, user);
           }
         });

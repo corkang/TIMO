@@ -12,55 +12,67 @@ const useStyles = makeStyles(() => ({
     backgroundColor: '#fafafa',
     border: '1px solid #ebebeb',
     borderRadius: 12,
-    padding: 16,
+    padding: '16px 20px',
     marginBottom: 12,
-  },
-  header: {
     display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 8,
+    flexDirection: 'column', // Changed to column to stack main row and actions
+    gap: 8,
+  },
+  mainRow: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center', // Center vertical alignment
+    gap: 16,
+    width: '100%',
+  },
+  // Left Column: Semester + Stars
+  leftCol: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '120px', // Fixed width
+    flexShrink: 0,
+    gap: 6,
   },
   semester: {
     fontSize: 13,
     color: '#1b8986',
-    fontWeight: 500,
+    fontWeight: 700,
     fontFamily: 'Noto Sans KR, sans-serif',
   },
-  ratingRow: {
+  ratingContainer: {
     display: 'flex',
     alignItems: 'center',
-    gap: 8,
-    marginTop: 4,
+    gap: 4,
   },
-  badges: {
+  ratingNumber: {
+    fontSize: 13,
+    fontWeight: 700,
+    color: '#333',
+    fontFamily: 'Lato, sans-serif',
+  },
+  // Middle Column: Text
+  midCol: {
     display: 'flex',
-    flexWrap: 'wrap',
-    gap: 6,
-    marginTop: 8,
-    marginBottom: 12,
-  },
-  badge: {
-    backgroundColor: '#e8f3f3',
-    color: '#1b8986',
-    fontSize: 12,
-    padding: '3px 8px',
-    borderRadius: 4,
-    fontFamily: 'Noto Sans KR, sans-serif',
+    flexDirection: 'column',
+    flex: 1,
+    paddingTop: 0,
   },
   comment: {
     fontSize: 14,
-    color: '#333',
+    color: '#222',
     lineHeight: 1.6,
-    marginBottom: 12,
     fontFamily: 'Noto Sans KR, sans-serif',
     whiteSpace: 'pre-wrap',
+    margin: 0,
   },
-  footer: {
+  // Right Column: Like
+  rightCol: {
     display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 8,
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    width: '60px', // Fixed width
+    flexShrink: 0,
+    gap: 8,
   },
   likeSection: {
     display: 'flex',
@@ -68,24 +80,34 @@ const useStyles = makeStyles(() => ({
     gap: 4,
   },
   likeButton: {
-    padding: 4,
+    padding: 0,
     color: '#ababab',
     '&:hover': {
       color: '#1b8986',
     },
   },
   likedButton: {
-    padding: 4,
+    padding: 0,
     color: '#1b8986',
   },
   likeCount: {
     fontSize: 13,
     color: '#ababab',
     fontFamily: 'Lato, sans-serif',
+    minWidth: 15,
+    textAlign: 'center',
+  },
+  // Bottom Row: Actions
+  actionRow: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    width: '100%',
+    paddingTop: 8,
+    borderTop: '1px solid #f0f0f0',
   },
   actions: {
     display: 'flex',
-    gap: 4,
+    gap: 8,
   },
   actionButton: {
     padding: 4,
@@ -94,26 +116,8 @@ const useStyles = makeStyles(() => ({
       color: '#1b8986',
     },
   },
-  date: {
-    fontSize: 12,
-    color: '#ababab',
-    fontFamily: 'Lato, sans-serif',
-  },
 }));
 
-function getRelativeTime(dateString) {
-  const date = new Date(dateString);
-  const now = new Date();
-  const diffMs = now - date;
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-  if (diffDays === 0) return '오늘';
-  if (diffDays === 1) return '어제';
-  if (diffDays < 7) return `${diffDays}일 전`;
-  if (diffDays < 30) return `${Math.floor(diffDays / 7)}주 전`;
-  if (diffDays < 365) return `${Math.floor(diffDays / 30)}개월 전`;
-  return `${Math.floor(diffDays / 365)}년 전`;
-}
 
 export default function ReviewItem({
   review,
@@ -123,58 +127,51 @@ export default function ReviewItem({
 }) {
   const classes = useStyles();
 
-  const badges = [
-    { key: 'grading', label: REVIEW_LABELS.grading[review.grading] },
-    { key: 'difficulty', label: REVIEW_LABELS.difficulty[review.difficulty] },
-    { key: 'exams', label: `시험: ${REVIEW_LABELS.exams[review.exams]}` },
-    { key: 'assignments', label: `과제: ${REVIEW_LABELS.assignments[review.assignments]}` },
-    { key: 'teamProjects', label: `팀플: ${REVIEW_LABELS.teamProjects[review.teamProjects]}` },
-  ];
-
   return (
     <Box className={classes.item}>
-      <Box className={classes.header}>
-        <Box>
+      {/* Main Row: Info, Text, Like */}
+      <Box className={classes.mainRow}>
+        {/* Left Column */}
+        <Box className={classes.leftCol}>
           <Typography className={classes.semester}>
             {review.semester}학기 수강자
           </Typography>
-          <Box className={classes.ratingRow}>
-            <StarRating rating={review.rating} size={16} />
+          <Box className={classes.ratingContainer}>
+            <StarRating rating={review.rating} size={14} />
+            <Typography className={classes.ratingNumber}>
+              {review.rating.toFixed(1)}
+            </Typography>
           </Box>
         </Box>
-        <Typography className={classes.date}>
-          {getRelativeTime(review.createdAt)}
-        </Typography>
-      </Box>
 
-      <Box className={classes.badges}>
-        {badges.map((badge) => (
-          <span key={badge.key} className={classes.badge}>
-            {badge.label}
-          </span>
-        ))}
-      </Box>
-
-      <Typography className={classes.comment}>{review.comment}</Typography>
-
-      <Box className={classes.footer}>
-        <Box className={classes.likeSection}>
-          <IconButton
-            className={review.isLikedByMe ? classes.likedButton : classes.likeButton}
-            onClick={() => onLike && onLike(review.id)}
-            size="small"
-            disabled={review.isMyReview}
-          >
-            {review.isLikedByMe ? (
-              <ThumbUpIcon fontSize="small" />
-            ) : (
-              <ThumbUpOutlinedIcon fontSize="small" />
-            )}
-          </IconButton>
-          <Typography className={classes.likeCount}>{review.likeCount}</Typography>
+        {/* Middle Column */}
+        <Box className={classes.midCol}>
+          <Typography className={classes.comment}>{review.comment}</Typography>
         </Box>
 
-        {review.isMyReview && (
+        {/* Right Column */}
+        <Box className={classes.rightCol}>
+          <Box className={classes.likeSection}>
+            <IconButton
+              className={review.isLikedByMe ? classes.likedButton : classes.likeButton}
+              onClick={() => onLike && onLike(review.id)}
+              size="small"
+              disabled={review.isMyReview}
+            >
+              {review.isLikedByMe ? (
+                <ThumbUpIcon fontSize="small" />
+              ) : (
+                <ThumbUpOutlinedIcon fontSize="small" />
+              )}
+            </IconButton>
+            <Typography className={classes.likeCount}>{review.likeCount}</Typography>
+          </Box>
+        </Box>
+      </Box>
+
+      {/* Bottom Row: Actions (Only for My Review) */}
+      {review.isMyReview && (
+        <Box className={classes.actionRow}>
           <Box className={classes.actions}>
             <IconButton
               className={classes.actionButton}
@@ -191,8 +188,8 @@ export default function ReviewItem({
               <DeleteIcon fontSize="small" />
             </IconButton>
           </Box>
-        )}
-      </Box>
+        </Box>
+      )}
     </Box>
   );
 }

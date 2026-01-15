@@ -11,7 +11,19 @@ const useStyles = makeStyles(() => ({
     marginBottom: 16,
   },
   header: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
     marginBottom: 16,
+  },
+  headerLeft: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  headerRight: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-end',
   },
   courseName: {
     fontSize: 18,
@@ -25,21 +37,11 @@ const useStyles = makeStyles(() => ({
     marginTop: 4,
     fontFamily: 'Noto Sans KR, sans-serif',
   },
-  ratingSection: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 8,
-    marginTop: 12,
-  },
-  avgRating: {
-    fontSize: 24,
+  ratingText: {
+    fontSize: 16,
+    color: '#333',
     fontWeight: 700,
-    color: '#1b8986',
-    fontFamily: 'Lato, sans-serif',
-  },
-  reviewCount: {
-    fontSize: 14,
-    color: '#ababab',
+    marginTop: 4,
     fontFamily: 'Lato, sans-serif',
   },
   statsSection: {
@@ -57,7 +59,7 @@ const useStyles = makeStyles(() => ({
 // Progress Bar 값 계산 (0-100)
 const SCORE_MAP = {
   grading: { generous: 0, normal: 33, tight: 67, survival: 100 },
-  difficulty: { easy: 0, low: 25, mid: 50, normal: 75, hard: 100 },
+  difficulty: { easy: 0, normal: 50, hard: 100 },
   assignments: { none: 0, normal: 50, heavy: 100 },
   teamProjects: { none: 0, normal: 50, heavy: 100 },
 };
@@ -77,12 +79,29 @@ function calculateProgressValue(distribution, scoreMap) {
   return totalPercent > 0 ? totalScore / totalPercent : 0;
 }
 
-export default function CourseStatsCard({ courseInfo, stats }) {
+export function CourseHeader({ courseInfo, stats }) {
   const classes = useStyles();
+  if (!courseInfo || !stats) return null;
 
-  if (!courseInfo || !stats) {
-    return null;
-  }
+  return (
+    <Box className={classes.header}>
+      <Box className={classes.headerLeft}>
+        <Typography className={classes.courseName}>{courseInfo.courseName}</Typography>
+        <Typography className={classes.professor}>{courseInfo.professor}</Typography>
+      </Box>
+      <Box className={classes.headerRight}>
+        <StarRating rating={stats.avgRating || 0} size={20} />
+        <Typography className={classes.ratingText}>
+          {stats.avgRating?.toFixed(1) || '0.0'} ({courseInfo.reviewCount || 0})
+        </Typography>
+      </Box>
+    </Box>
+  );
+}
+
+export function CourseStats({ stats }) {
+  const classes = useStyles();
+  if (!stats) return null;
 
   const progressStats = [
     {
@@ -104,27 +123,26 @@ export default function CourseStatsCard({ courseInfo, stats }) {
   ];
 
   return (
-    <Box className={classes.card}>
-      <Box className={classes.header}>
-        <Typography className={classes.courseName}>{courseInfo.courseName}</Typography>
-        <Typography className={classes.professor}>{courseInfo.professor}</Typography>
-        <Box className={classes.ratingSection}>
-          <Typography className={classes.avgRating}>
-            {stats.avgRating?.toFixed(1) || '0.0'}
-          </Typography>
-          <StarRating rating={stats.avgRating || 0} size={20} />
-          <Typography className={classes.reviewCount}>
-            ({courseInfo.reviewCount || 0}개의 강의평)
-          </Typography>
-        </Box>
-      </Box>
+    <Box className={classes.statsSection}>
+      <Typography className={classes.statsTitle}>강의 통계</Typography>
+      {progressStats.map((stat) => (
+        <ProgressBar key={stat.label} label={stat.label} value={stat.value} />
+      ))}
+    </Box>
+  );
+}
 
-      <Box className={classes.statsSection}>
-        <Typography className={classes.statsTitle}>강의 통계</Typography>
-        {progressStats.map((stat) => (
-          <ProgressBar key={stat.label} label={stat.label} value={stat.value} />
-        ))}
-      </Box>
+export default function CourseStatsCard({ courseInfo, stats }) {
+  const classes = useStyles();
+
+  if (!courseInfo || !stats) {
+    return null;
+  }
+
+  return (
+    <Box className={classes.card}>
+      <CourseHeader courseInfo={courseInfo} stats={stats} />
+      <CourseStats stats={stats} />
     </Box>
   );
 }

@@ -10,14 +10,15 @@
     "@testing-library/react": "^12.1.5",
     "@testing-library/user-event": "^13.5.0",
     "axios": ">=0.21.1",
+    "html2canvas": "^1.4.1",
+    "jose": "^4.15.4",
     "react": "^17.0.2",
     "react-cookie": "^4.0.3",
     "react-dom": "^17.0.2",
     "react-if": "^4.0.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "5.0.1",
-    "sass": "^1.77.6",
-    "jose": "^4.15.4"
+    "sass": "^1.77.6"
   },
   "scripts": {
     "start": "react-scripts start",

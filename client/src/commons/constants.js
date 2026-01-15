@@ -81,11 +81,12 @@ export const REVIEW_ACTIONS = {
 
 // 평가 항목 옵션
 export const REVIEW_CRITERIA = {
-  grading: ['generous', 'normal', 'tight', 'survival'],
-  difficulty: ['easy', 'low', 'mid', 'normal', 'hard'],
+  grading: ['generous', 'normal', 'tight'],
+  difficulty: ['easy', 'normal', 'hard'],
   exams: ['none', 'normal', 'hard'],
-  assignments: ['none', 'normal', 'heavy'],
-  teamProjects: ['none', 'normal', 'heavy'],
+  quiz: ['none', 'normal', 'hard'],
+  assignments: ['heavy', 'normal', 'none'],
+  teamProjects: ['heavy', 'normal', 'none'],
   onlineOfflineRatio: ['offline', 'half', 'online'],
   teachingMethod: ['theory', 'discussion', 'project'],
 };
@@ -96,29 +97,31 @@ export const REVIEW_LABELS = {
     generous: '너그러움',
     normal: '보통',
     tight: '깐깐함',
-    survival: '생존',
   },
   difficulty: {
     easy: '쉬움',
-    low: '1~2점',
-    mid: '3점 이상',
     normal: '보통',
     hard: '어려움',
   },
   exams: {
     none: '없음',
-    normal: '보통',
-    hard: '어려움',
+    normal: '1~2회',
+    hard: '3회 이상',
+  },
+  quiz: {
+    none: '없음',
+    normal: '1~2회',
+    hard: '3회 이상',
   },
   assignments: {
-    none: '없음',
-    normal: '보통',
     heavy: '많음',
+    normal: '보통',
+    none: '없음',
   },
   teamProjects: {
-    none: '없음',
-    normal: '보통',
     heavy: '많음',
+    normal: '보통',
+    none: '없음',
   },
   onlineOfflineRatio: {
     offline: '100% 오프라인',
@@ -126,9 +129,9 @@ export const REVIEW_LABELS = {
     online: '100% 온라인',
   },
   teachingMethod: {
-    theory: '이론 중심',
-    discussion: '토론 중심',
-    project: '프로젝트 중심',
+    theory: '이론 중심(강의 위주)',
+    discussion: '토론 중심(학생 참여형)',
+    project: '프로젝트 중심(팀 과제/발표)',
   },
 };
 
@@ -157,5 +160,4 @@ export const SEMESTER_OPTIONS = (() => {
 export const REVIEW_SORT_OPTIONS = [
   { value: 'latest', label: '최신순' },
   { value: 'likes', label: '좋아요순' },
-  { value: 'rating', label: '별점순' },
 ];

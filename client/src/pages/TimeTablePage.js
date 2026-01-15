@@ -25,10 +25,12 @@ import {
   TimetableSection,
   NewSemesterModal,
 } from '../components';
+import SearchReviewModal from '../components/SearchReviewModal';
+
 import { useUser, useSearch, useSnackbar, useModal } from '../hooks';
 
-import { copyToClipboard, isIn, isPeriodDup } from '../utils/helper';
-import { getShareLink } from '../utils/share';
+import { isIn, isPeriodDup } from '../utils/helper';
+import html2canvas from 'html2canvas';
 import useNotificationModal from '../hooks/useNotificationModal';
 
 const useStyles = makeStyles((theme) => ({
@@ -46,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
     minHeight: 'calc(100vh - 150px)',
     padding: '30px 7%',
     gap: 30,
+    position: 'relative',
 
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column-reverse',
@@ -78,6 +81,11 @@ export default function TimeTablePage() {
   const [modalState, modalDispatch, closeModal] = useModal();
   const [isNotiModalOpen, closeNotiModal] = useNotificationModal(NOTIFICATION_POSTED_AT);
 
+  // Review Modal State
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [selectedReviewLecture, setSelectedReviewLecture] = useState(null);
+  const [reviewModalTop, setReviewModalTop] = useState(0);
+
   const [searchTabIndex, setSearchTabIndex] = useState(0);
   const [timetableTabIndex, setTimetableTabIndex] = useState(0);
 
@@ -87,9 +95,26 @@ export default function TimeTablePage() {
     setTimetableLectures(timetables[timetableTabIndex]?.lectures ?? []);
   }, [timetableTabIndex, timetables]);
 
+  const [limit, setLimit] = useState(10);
+
+  useEffect(() => {
+    const calculateLimit = () => {
+      // Calculate search section body height: window height - header(150px) - search_header(35px) - search_bar(60px) - pagination(40px) - padding(50px)
+      // Approx 330px overhead.
+      // Average card height approx 140px.
+      const calculatedLimit = Math.floor((window.innerHeight - 330) / 140);
+      setLimit(Math.max(3, calculatedLimit));
+    };
+
+    calculateLimit();
+    window.addEventListener('resize', calculateLimit);
+    return () => window.removeEventListener('resize', calculateLimit);
+  }, []);
+
   const getSearchResults = (search, page) => {
+    handleCloseReviewModal();
     searchDispatch({ type: SEARCH_ACTIONS.START_SEARCH });
-    Lecture.getSearchResults(search, page).then(({ data: { lectures, pages } }) => {
+    Lecture.getSearchResults(search, page, limit).then(({ data: { lectures, pages } }) => {
       setSearchTabIndex(0);
       searchDispatch({
         type: SEARCH_ACTIONS.FINISH_SEARCH,
@@ -99,6 +124,7 @@ export default function TimeTablePage() {
   };
 
   const handleAddSpikeLectureClick = (lecture) => {
+    handleCloseReviewModal();
     if (spikes.length >= 4) return snackbarDispatch({ type: SNACKBAR_ACTIONS.ALERT_MAX_SPIKES });
 
     User.addSpikeLecture(lecture.id).then(() => {
@@ -110,6 +136,7 @@ export default function TimeTablePage() {
   };
 
   const handleDeleteSpikeLectureClick = (lecture) => {
+    handleCloseReviewModal();
     User.deleteSpikeLecture(lecture.id).then(() => {
       userDispatch({
         type: USER_ACTIONS.DELETE_SPIKE_LECTURE,
@@ -119,6 +146,7 @@ export default function TimeTablePage() {
   };
 
   const handleBookmarkLectureClick = (lecture) => {
+    handleCloseReviewModal();
     User.bookmarkLecture(lecture.id).then(() => {
       userDispatch({
         type: USER_ACTIONS.BOOKMARK_LECTURE,
@@ -128,6 +156,7 @@ export default function TimeTablePage() {
   };
 
   const handleUnbookmarkLectureClick = (lecture) => {
+    handleCloseReviewModal();
     User.unbookmarkLecture(lecture.id).then(() => {
       userDispatch({
         type: USER_ACTIONS.UNBOOKMARK_LECTURE,
@@ -136,7 +165,40 @@ export default function TimeTablePage() {
     });
   };
 
+  const handleReviewClick = (lecture) => {
+    setSelectedReviewLecture(lecture);
+    const element = document.getElementById(lecture.id);
+    if (element) {
+      const rect = element.getBoundingClientRect();
+      const modalHeight = 450; // Approximate max height of the modal
+      const viewportHeight = window.innerHeight;
+
+      let top = rect.top + window.scrollY - (modalHeight / 2);
+
+      // Check if modal extends beyond the top of the viewport
+      if (top < window.scrollY + 20) {
+        top = window.scrollY + 20;
+      }
+
+      // Check if modal extends beyond the bottom of the viewport
+      if (top + modalHeight > window.scrollY + viewportHeight) {
+        top = window.scrollY + viewportHeight - modalHeight - 20;
+      }
+
+      setReviewModalTop(top);
+    } else {
+      setReviewModalTop(window.scrollY + 100); // Fallback
+    }
+    setIsReviewModalOpen(true);
+  };
+
+  const handleCloseReviewModal = () => {
+    setIsReviewModalOpen(false);
+    setSelectedReviewLecture(null);
+  };
+
   const handleAddLectureClick = (lecture) => {
+    handleCloseReviewModal();
     if (timetables.length === 0)
       return snackbarDispatch({ type: SNACKBAR_ACTIONS.ALERT_NO_CURRENT_TIMETABLE });
 
@@ -186,16 +248,6 @@ export default function TimeTablePage() {
     });
   };
 
-  const openShareTimetableModal = () => {
-    if (timetables.length === 0)
-      return snackbarDispatch({ type: SNACKBAR_ACTIONS.ALERT_NO_SHAREABLE_TIMETABLE });
-
-    modalDispatch({
-      type: MODAL_ACTIONS.OPEN_SHARE_TIMETABLE_MODAL,
-      payload: { onSubmit: handleShareTimetable },
-    });
-  };
-
   const openDeleteLectureModal = (lecture) => {
     modalDispatch({
       type: MODAL_ACTIONS.OPEN_DELETE_LECTURE_MODAL,
@@ -230,12 +282,56 @@ export default function TimeTablePage() {
     });
   };
 
-  const handleShareTimetable = async () => {
+  const handleShareClick = async () => {
+    if (timetables.length === 0)
+      return snackbarDispatch({ type: SNACKBAR_ACTIONS.ALERT_NO_SHAREABLE_TIMETABLE });
+
     try {
-      const shareLink = await getShareLink(timetables[timetableTabIndex].id);
-      copyToClipboard(shareLink);
-      modalDispatch({ type: MODAL_ACTIONS.CLOSE });
-      snackbarDispatch({ type: SNACKBAR_ACTIONS.ALERT_SHARE_LINK_COPIED });
+      const element = document.getElementById('timetable-grid');
+      if (!element) return;
+
+      // Temporarily expand height to capture full scrollable area
+      const originalHeight = element.style.height;
+      const originalOverflow = element.style.overflow;
+      element.style.height = `${element.scrollHeight}px`;
+      element.style.overflow = 'visible';
+
+      const canvas = await html2canvas(element, { scale: 2 });
+
+      // Restore original style
+      element.style.height = originalHeight;
+      element.style.overflow = originalOverflow;
+
+      // Create mobile wallpaper canvas (1170x2532 for generic high-res mobile)
+      const wallpaperWidth = 1170;
+      const wallpaperHeight = 2532;
+
+      const combinedCanvas = document.createElement('canvas');
+      combinedCanvas.width = wallpaperWidth;
+      combinedCanvas.height = wallpaperHeight;
+      const ctx = combinedCanvas.getContext('2d');
+
+      // Fill background
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, wallpaperWidth, wallpaperHeight);
+
+      // Draw timetable centered
+      const targetWidth = wallpaperWidth * 0.9; // 90% width of wallpaper
+      const scaleFactor = targetWidth / canvas.width;
+      const drawWidth = canvas.width * scaleFactor;
+      const drawHeight = canvas.height * scaleFactor;
+
+      const x = (wallpaperWidth - drawWidth) / 2;
+      const y = (wallpaperHeight - drawHeight) / 2;
+
+      ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height, x, y, drawWidth, drawHeight);
+
+      // Download
+      const link = document.createElement('a');
+      link.download = `TIMO_timetable_${Date.now()}.png`;
+      link.href = combinedCanvas.toDataURL('image/png');
+      link.click();
+
     } catch (error) {
       console.error(error);
       snackbarDispatch({ type: SNACKBAR_ACTIONS.ALERT_DEFAULT_ERROR });
@@ -288,6 +384,7 @@ export default function TimeTablePage() {
                 handleAddSpikeLectureClick,
                 handleDeleteSpikeLectureClick,
                 handleDeleteLectureClick: openDeleteLectureModal,
+                handleReviewClick,
               }}
             />
           </Box>
@@ -305,10 +402,16 @@ export default function TimeTablePage() {
               handleCreateTimetableClick: openCreateTimetableModal,
               handleDeleteTimetableClick: openDeleteTimetableModal,
               handleEditTimetableClick: openEditTimetableModal,
-              handleShareTimetableClick: openShareTimetableModal,
+              handleShareTimetableClick: handleShareClick,
             }}
           />
         </Box>
+        <SearchReviewModal
+          open={isReviewModalOpen}
+          onClose={handleCloseReviewModal}
+          lecture={selectedReviewLecture}
+          style={{ top: reviewModalTop, left: 'calc(41.4vw + 30px)' }}
+        />
       </Box>
       <Snackbar {...{ ...snackbarState, onClose: closeSnackBar }} />
       <Footer />

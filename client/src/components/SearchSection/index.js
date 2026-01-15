@@ -92,6 +92,7 @@ export default function SearchSection({
   handleAddSpikeLectureClick,
   handleDeleteSpikeLectureClick,
   handleSearchPageChange,
+  handleReviewClick,
 }) {
   const classes = useStyles();
   const searchListRef = useRef();
@@ -131,6 +132,7 @@ export default function SearchSection({
                 onUnbookmarkClick={() => handleUnbookmarkLectureClick(lecture)}
                 onAddSpikeClick={() => handleAddSpikeLectureClick(lecture)}
                 onDeleteSpikeClick={() => handleDeleteSpikeLectureClick(lecture)}
+                onReviewClick={() => handleReviewClick(lecture)}
               />
             ))}
           </Box>

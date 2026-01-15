@@ -137,7 +137,7 @@ export default function CourseCard({
           <Box className={classes.titleRow}>
             <Typography className={classes.courseName}>{course.courseName}</Typography>
             {course.courseCode && (
-              <Typography className={classes.courseCode}>{course.courseCode}</Typography>
+              <Typography className={classes.courseCode}>{course.courseCode.split('-')[0]}</Typography>
             )}
           </Box>
           <Typography className={classes.professor}>{course.professor}</Typography>

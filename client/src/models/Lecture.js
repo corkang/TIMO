@@ -19,14 +19,15 @@ export default class Lecture {
     this.grading = raw.grading;
     this.pfPossible = raw.pfPossible;
     this.crawledAt = raw.crawledAt;
+    this.reviewStats = raw.reviewStats;
     this.isBookmarked = isIn(raw, bookmarks, 'id');
     this.isSpike = isIn(raw, spikes, 'id');
     this.isAdded = false;
   }
 
-  static getSearchResults = async (search, page, limit = 20) =>
+  static getSearchResults = async (search, page, limit = 20, groupBy = false) =>
     await Axios().get(
-      `/search?search=${search}${page ? `&page=${page}` : ''}&limit=${limit}`,
+      `/search?search=${search}${page ? `&page=${page}` : ''}&limit=${limit}${groupBy ? '&groupBy=true' : ''}`,
     );
 }
 
