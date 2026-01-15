@@ -110,9 +110,10 @@ const useStyles = makeStyles((theme) => ({
 
   textbutton: {
     width: 95,
+    height: 40, // Enforce height
     backgroundColor: '#1B8986',
     color: '#FAFAFA',
-    borderRadius: 10,
+    borderRadius: 20,
     fontFamily: 'Lato',
     fontWeight: 700,
     fontSize: 16,
@@ -121,9 +122,33 @@ const useStyles = makeStyles((theme) => ({
     },
     [theme.breakpoints.down('sm')]: {
       width: 65,
+      height: 32, // Enforce height for mobile
       fontSize: 12,
       minWidth: 'unset',
-      padding: '6px 8px',
+      padding: '0', // Remove padding to respect height
+    },
+  },
+
+  feedbackButton: {
+    width: 40,
+    height: 40,
+    minWidth: 40,
+    borderRadius: 20,
+    backgroundColor: '#DDEDED',
+    padding: 0,
+    marginRight: 10,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    '&:hover': {
+      backgroundColor: '#C5E5E5',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: 32,
+      height: 32,
+      minWidth: 32,
+      borderRadius: 16, // Adjust radius for smaller size? Or keep 20? User said 20. I'll keep 20 or scaled. If size is 32, radius 20 is still full round.
+      marginRight: 8,
     },
   },
 }));
@@ -173,15 +198,17 @@ export default function Header({ logout, openReportFeedbackModal, isSharePage })
             {navItems.map((item) => (
               <Box
                 key={item.path}
-                className={`${classes.navItem} ${
-                  location.pathname === item.path ? classes.navItemActive : ''
-                }`}
+                className={`${classes.navItem} ${location.pathname === item.path ? classes.navItemActive : ''
+                  }`}
                 onClick={() => handleNavClick(item.path)}
               >
                 {item.label}
               </Box>
             ))}
           </Box>
+          <Button className={classes.feedbackButton} onClick={openReportFeedbackModal}>
+            <img src="/feedbacklogo.svg" alt="feedback" style={{ width: '20px', height: '20px' }} />
+          </Button>
           <Button className={classes.textbutton} onClick={logout}>로그아웃</Button>
         </>
       ) : (
