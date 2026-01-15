@@ -5,8 +5,9 @@ import { REVIEW_SORT_OPTIONS } from '../../commons/constants';
 
 const useStyles = makeStyles(() => ({
   container: {
-    flex: 1,
-    overflowY: 'auto',
+    // flex: 1, // Removed to allow parent to handle scroll
+    // overflowY: 'auto', // Removed to allow parent to handle scroll
+    width: '100%',
   },
   header: {
     display: 'flex',

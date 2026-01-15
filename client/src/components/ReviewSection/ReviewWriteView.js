@@ -285,20 +285,12 @@ export default function ReviewWriteView({
 
     return (
         <Box className={classes.root}>
-            {/* Header */}
-            {/* 
-         The design doesn't show a header for Write view, just the form. 
-         But we need a way to go back if user cancels? 
-         Or "Review - Writing" header.
-      */}
-            {/*
-      <Box className={classes.header}>
-        <IconButton onClick={onCancel}>
-            <ArrowBackIcon />
-        </IconButton>
-        <Typography className={classes.headerTitle}>강의평 작성</Typography>
-      </Box>
-      */}
+            <Box className={classes.header}>
+                <IconButton onClick={onCancel} style={{ padding: 8 }}>
+                    <ArrowBackIcon />
+                </IconButton>
+                <Typography className={classes.headerTitle}>강의평 작성</Typography>
+            </Box>
 
             <Box className={classes.content}>
                 {/* Course Info Summary */}

@@ -211,7 +211,7 @@ export default function TimetableSection({
           <DayIndicator indicator={indicator} key={index} />
         ))}
       </Box> */}
-      <Box className={classes.timetableBody}>
+      <Box className={classes.timetableBody} id="timetable-grid">
         {Array.from(Array(TIMETABLE_DAYS.length * MAX_PERIOD)).map((value, index) => {
           if (index % TIMETABLE_DAYS.length === 0)
             return <PeriodIndicator index={index} key={index} />;

@@ -8,6 +8,10 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
 import EcoOutlinedIcon from '@material-ui/icons/EcoOutlined';
 import EcoIcon from '@material-ui/icons/Eco';
+import StarIcon from '@material-ui/icons/Star';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
+import StarHalfIcon from '@material-ui/icons/StarHalf'; // In case we need it later, though requirement said full stars for now or just fill based on rating.
+
 import { SEARCH_TABS } from '../../commons/constants';
 
 const useStyles = makeStyles((theme) => ({
@@ -19,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
     border: '1px solid #dfe1e5',
     marginBottom: '10px',
     padding: '5px',
+    position: 'relative', // For absolute positioning of Add button
 
     '&:hover': {
       borderColor: 'rgba(223,225,229,0)',
@@ -29,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     padding: '15px',
+    width: '100%', // Ensure it takes full width so we can position things relative to it if needed, or just let it expand
   },
 
   row: {
@@ -93,12 +99,59 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#F5EA9F',
   },
 
-  buttonBox: {
+  // Modified button box to handle absolute positioning of add button and bottom stacking of review
+  buttonContainer: {
     display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    minWidth: '80px', // Reserve space for buttons
     marginLeft: 'auto',
-    alignItems: 'center',
+    padding: '15px 15px 15px 0',
   },
 
+  addButton: {
+    backgroundColor: '#1B8986',
+    color: '#FAFAFA',
+    borderRadius: 8,
+    fontFamily: 'Lato',
+    fontWeight: 700,
+    fontSize: 14,
+    padding: '3px 10px',
+    minWidth: 'fit-content',
+
+    '&:hover': {
+      backgroundColor: '#156E6B'
+    },
+  },
+
+  reviewButton: {
+    backgroundColor: '#EAEAEA',
+    color: '#333333',
+    borderRadius: 8,
+    fontFamily: 'Lato',
+    fontWeight: 700,
+    fontSize: 13,
+    padding: '5px 10px',
+    marginBottom: '4px',
+
+    '&:hover': {
+      backgroundColor: '#D1D1D1'
+    },
+  },
+
+  starContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    color: '#FFB800', // Star color
+  },
+
+  starIcon: {
+    fontSize: 16,
+  },
+
+  // Legacy styles
   textButton: {
     backgroundColor: '#1B8986',
     color: '#FAFAFA',
@@ -108,10 +161,16 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 14,
     padding: '8px 12px',
     margin: '12px 10px',
-    
+
     '&:hover': {
       backgroundColor: '#156E6B'
     },
+  },
+
+  buttonBox: {
+    display: 'flex',
+    marginLeft: 'auto',
+    alignItems: 'center',
   },
 
   blckText: {
@@ -184,6 +243,7 @@ export default function LectureCard({
   lecture,
   onAddClick,
   onDeleteClick,
+  onReviewClick,
   onBookmarkClick,
   onUnbookmarkClick,
   onAddSpikeClick,
@@ -194,8 +254,8 @@ export default function LectureCard({
   const classes = useStyles();
 
   // Calculate competition rate
-  const competitionRate = lecture.maxNum > 0 
-    ? (lecture.curNum / lecture.maxNum).toFixed(2) 
+  const competitionRate = lecture.maxNum > 0
+    ? (lecture.curNum / lecture.maxNum).toFixed(2)
     : 0;
 
   // Calculate excess (초과 인원)
@@ -253,34 +313,36 @@ export default function LectureCard({
     );
   };
 
+  const renderStars = (rating) => {
+    const stars = [];
+    const roundedRating = Math.round(rating);
+    for (let i = 1; i <= 5; i++) {
+      if (i <= roundedRating) {
+        stars.push(<StarIcon key={i} className={classes.starIcon} />);
+      } else {
+        stars.push(<StarBorderIcon key={i} className={classes.starIcon} />);
+      }
+    }
+    return stars;
+  };
+
   const DefaultButtonGroup = () => {
+    // Mock rating for now, should come from lecture object eventually
+    const rating = parseFloat(lecture.reviewStats?.avgRating || lecture.avgRating || 0);
+
     return (
-      <Box className={classes.buttonBox}>
-        <Button className={classes.textButton} onClick={onAddClick}>
+      <Box className={classes.buttonContainer}>
+        <Button className={classes.addButton} onClick={onAddClick}>
           추가
         </Button>
-        {/* <IconButton onClick={lecture.isBookmarked ? onUnbookmarkClick : onBookmarkClick}>
-          {lecture.isBookmarked ? (
-            <Tooltip title="즐겨찾기 삭제" arrow>
-              <BookmarkIcon />
-            </Tooltip>
-          ) : (
-            <Tooltip title="즐겨찾기 추가" arrow>
-              <BookmarkBorderIcon />
-            </Tooltip>
-          )}
-        </IconButton>
-        <IconButton onClick={lecture.isSpike ? onDeleteSpikeClick : onAddSpikeClick}>
-          {lecture.isSpike ? (
-            <Tooltip title="이삭 줍기에서 삭제" arrow>
-              <EcoIcon />
-            </Tooltip>
-          ) : (
-            <Tooltip title="이삭 줍기에서 추가" arrow>
-              <EcoOutlinedIcon />
-            </Tooltip>
-          )}
-        </IconButton> */}
+        <Box display="flex" flexDirection="column" alignItems="flex-end" marginTop="auto">
+          <Button className={classes.reviewButton} onClick={onReviewClick}>
+            강의평
+          </Button>
+          <Box className={classes.starContainer}>
+            {renderStars(rating)}
+          </Box>
+        </Box>
       </Box>
     );
   };
@@ -308,7 +370,7 @@ export default function LectureCard({
           </Box>
           <Box className={classes.row}>
             <Typography>{lecture.period.replace(',', '/')}</Typography>
-            <Typography className={classes.item}>{", "+lecture.credit}학점</Typography>
+            <Typography className={classes.item}>{", " + lecture.credit}학점</Typography>
           </Box>
           <Box className={classes.row}>
             <Typography className={`${classes.item} ${classes.redText}`}>
@@ -353,7 +415,7 @@ export default function LectureCard({
         </Box>
         <Box className={classes.row}>
           <Typography>{lecture.period.replace(',', '/')}</Typography>
-          <Typography className={classes.item}>{", "+lecture.credit}학점</Typography>
+          <Typography className={classes.item}>{", " + lecture.credit}학점</Typography>
         </Box>
         <Box className={classes.row}>
           <Typography className={`${classes.item} ${classes.redText}`}>
@@ -370,7 +432,6 @@ export default function LectureCard({
             </Typography>
           </Box>
         )}
-        
       </Box>
       {
         <Switch>

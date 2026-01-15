@@ -233,8 +233,9 @@ export default function ReviewPage() {
     }
 
     try {
-      const { data } = await Lecture.getSearchResults(query, pageNum, 20);
+      const { data } = await Lecture.getSearchResults(query, pageNum, 20, true);
       const newLectures = data.lectures || [];
+      // console.log('[DEBUG] ReviewPage lectures:', newLectures);
 
       if (reset) {
         setLectures(newLectures);
@@ -372,8 +373,8 @@ export default function ReviewPage() {
     professor: lecture.professor,
     period: lecture.period,
     credit: lecture.credit,
-    avgRating: 0,
-    reviewCount: 0,
+    avgRating: lecture.reviewStats?.avgRating || 0,
+    reviewCount: lecture.reviewStats?.reviewCount || 0,
   });
 
   // Render Content based on viewMode
@@ -422,7 +423,7 @@ export default function ReviewPage() {
                 key={lecture.id}
                 course={convertLectureToCourse(lecture)}
                 onViewReviews={() => handleViewReviews(lecture)}
-                showPeriod={true}
+                showPeriod={false}
               />
             ))}
             {loadingMore && (
@@ -476,7 +477,7 @@ export default function ReviewPage() {
           <Box className={classes.searchFieldWrapper}>
             <TextField
               variant="outlined"
-              placeholder="강의명/교수명//과목코드"
+              placeholder="강의명/교수명/과목코드"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className={classes.searchField}
