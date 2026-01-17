@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 
   icon: {
     marginRight: 3,
-    width: 200,
+    width: 177,
     [theme.breakpoints.down('sm')]: {
       width: 100,
     },
