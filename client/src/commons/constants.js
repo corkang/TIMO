@@ -10,6 +10,30 @@ export const MAX_PERIOD = 9;
 
 export const TIMETABLE_COLORSET = ["#F5C6C6", "#F5DDC7", "#F5EFC7", "#E5F5C7", "#C7F5CC", "#C7F5EF", "#C7E2F5", "#C7D5F5", "#D9C7F5", "#F5C7F3"];
 
+// 1교시: 08:30 ~ 09:45
+// 2교시: 10:00 ~ 11:15
+// 3교시: 11:30 ~ 12:45
+// 4교시: 13:00 ~ 14:15
+// 5교시: 14:30 ~ 15:45
+// 6교시: 16:00 ~ 17:15
+// 7교시: 17:30 ~ 18:45
+// 8교시: 19:00 ~ 20:15
+// 9교시: 20:30 ~ 21:45
+export const PERIOD_HOURS_MAP = {
+  1: { start: { h: 8, m: 30 }, end: { h: 9, m: 45 } },
+  2: { start: { h: 10, m: 0 }, end: { h: 11, m: 15 } },
+  3: { start: { h: 11, m: 30 }, end: { h: 12, m: 45 } },
+  4: { start: { h: 13, m: 0 }, end: { h: 14, m: 15 } },
+  5: { start: { h: 14, m: 30 }, end: { h: 15, m: 45 } },
+  6: { start: { h: 16, m: 0 }, end: { h: 17, m: 15 } },
+  7: { start: { h: 17, m: 30 }, end: { h: 18, m: 45 } },
+  8: { start: { h: 19, m: 0 }, end: { h: 20, m: 15 } },
+  9: { start: { h: 20, m: 30 }, end: { h: 21, m: 45 } },
+};
+
+export const TIMETABLE_START_HOUR = 8;
+export const TIMETABLE_END_HOUR = 22;
+
 export const NOTIFICATION_POSTED_AT = new Date('2022-01-13');
 
 export const SEARCH_TABS = {

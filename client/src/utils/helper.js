@@ -18,16 +18,12 @@ export const isPeriodDup = (lecture, timetableLectures) => {
 export const copyToClipboard = (text) => {
   const textarea = document.createElement('textarea');
 
-  textarea.textContent = text;
+  textarea.value = text;
+  textarea.style.position = 'fixed';
+  textarea.style.left = '-9999px';
   document.body.appendChild(textarea);
 
-  const selection = document.getSelection();
-  const range = document.createRange();
-
-  range.selectNode(textarea);
-  selection.removeAllRanges();
-  selection.addRange(range);
-
+  textarea.select();
   document.execCommand('copy');
-  selection.removeAllRanges();
+  document.body.removeChild(textarea);
 };
