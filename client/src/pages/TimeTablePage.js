@@ -29,8 +29,9 @@ import SearchReviewModal from '../components/SearchReviewModal';
 
 import { useUser, useSearch, useSnackbar, useModal } from '../hooks';
 
-import { isIn, isPeriodDup } from '../utils/helper';
-import html2canvas from 'html2canvas';
+import { isIn, isPeriodDup, copyToClipboard } from '../utils/helper';
+import { getShareLink } from '../utils/share';
+
 import useNotificationModal from '../hooks/useNotificationModal';
 
 const useStyles = makeStyles((theme) => ({
@@ -282,60 +283,20 @@ export default function TimeTablePage() {
     });
   };
 
+
+
   const handleShareClick = async () => {
-    if (timetables.length === 0)
-      return snackbarDispatch({ type: SNACKBAR_ACTIONS.ALERT_NO_SHAREABLE_TIMETABLE });
-
     try {
-      const element = document.getElementById('timetable-grid');
-      if (!element) return;
-
-      // Temporarily expand height to capture full scrollable area
-      const originalHeight = element.style.height;
-      const originalOverflow = element.style.overflow;
-      element.style.height = `${element.scrollHeight}px`;
-      element.style.overflow = 'visible';
-
-      const canvas = await html2canvas(element, { scale: 2 });
-
-      // Restore original style
-      element.style.height = originalHeight;
-      element.style.overflow = originalOverflow;
-
-      // Create mobile wallpaper canvas (1170x2532 for generic high-res mobile)
-      const wallpaperWidth = 1170;
-      const wallpaperHeight = 2532;
-
-      const combinedCanvas = document.createElement('canvas');
-      combinedCanvas.width = wallpaperWidth;
-      combinedCanvas.height = wallpaperHeight;
-      const ctx = combinedCanvas.getContext('2d');
-
-      // Fill background
-      ctx.fillStyle = '#FFFFFF';
-      ctx.fillRect(0, 0, wallpaperWidth, wallpaperHeight);
-
-      // Draw timetable centered
-      const targetWidth = wallpaperWidth * 0.9; // 90% width of wallpaper
-      const scaleFactor = targetWidth / canvas.width;
-      const drawWidth = canvas.width * scaleFactor;
-      const drawHeight = canvas.height * scaleFactor;
-
-      const x = (wallpaperWidth - drawWidth) / 2;
-      const y = (wallpaperHeight - drawHeight) / 2;
-
-      ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height, x, y, drawWidth, drawHeight);
-
-      // Download
-      const link = document.createElement('a');
-      link.download = `TIMO_timetable_${Date.now()}.png`;
-      link.href = combinedCanvas.toDataURL('image/png');
-      link.click();
-
+      const shareLink = await getShareLink(timetables[timetableTabIndex].id);
+      copyToClipboard(shareLink);
+      modalDispatch({ type: MODAL_ACTIONS.CLOSE });
+      snackbarDispatch({ type: SNACKBAR_ACTIONS.ALERT_SHARE_LINK_COPIED });
     } catch (error) {
       console.error(error);
       snackbarDispatch({ type: SNACKBAR_ACTIONS.ALERT_DEFAULT_ERROR });
     }
+
+
   };
 
   const handleEditTimetable = (title) => {
