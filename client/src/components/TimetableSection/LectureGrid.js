@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => {
       flexDirection: 'column',
       justifyContent: 'space-around',
       alignItems: 'center',
-      padding: '1px',
+      // padding: '1px',
       overflow: 'hidden',
       cursor: 'pointer',
       backgroundColor: (props) => (props.bgColor),
@@ -18,12 +18,14 @@ const useStyles = makeStyles((theme) => {
     },
 
     item: {
-      height: '20px',
+      height: 'auto', // Changed to auto to fit content or flexible height
+      maxHeight: '100%', // Ensure it doesn't overflow
       overflow: 'hidden',
       textAlign: 'center',
       textOverflow: 'ellipsis',
       opacity: (props) => (props.isHovered ? 0.3 : 1),
       display: (props) => (props.isConnected ? 'none' : 'block'),
+      lineHeight: 1.1,
     },
 
     hoverLayer: {
