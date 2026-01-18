@@ -35,6 +35,12 @@ function searchReducer(state, { type }) {
     case SNACKBAR_ACTIONS.ALERT_MAX_SPIKES:
       return { open: true, message: '이삭 줍기는 최대 4개까지 가능합니다!' };
 
+    case SNACKBAR_ACTIONS.ALERT_ALREADY_REPRESENTATIVE:
+      return { open: true, message: '이미 대표시간표입니다!' };
+
+    case SNACKBAR_ACTIONS.ALERT_SET_REPRESENTATIVE:
+      return { open: true, message: '대표시간표로 지정되었습니다', severity: 'success' };
+
     default:
       return state;
   }

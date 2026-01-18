@@ -325,6 +325,19 @@ export default function TimeTablePage() {
     });
   };
 
+  const handleSetRepresentative = () => {
+    if (timetableTabIndex === 0) {
+      snackbarDispatch({ type: SNACKBAR_ACTIONS.ALERT_ALREADY_REPRESENTATIVE });
+    } else {
+      userDispatch({
+        type: USER_ACTIONS.SWAP_TIMETABLE,
+        payload: { index1: 0, index2: timetableTabIndex },
+      });
+      setTimetableTabIndex(0);
+      snackbarDispatch({ type: SNACKBAR_ACTIONS.ALERT_SET_REPRESENTATIVE });
+    }
+  };
+
   return (
     <Box className={classes.root}>
       <Box className={classes.body}>
@@ -363,7 +376,10 @@ export default function TimeTablePage() {
               handleCreateTimetableClick: openCreateTimetableModal,
               handleDeleteTimetableClick: openDeleteTimetableModal,
               handleEditTimetableClick: openEditTimetableModal,
+              handleDeleteTimetableClick: openDeleteTimetableModal,
+              handleEditTimetableClick: openEditTimetableModal,
               handleShareTimetableClick: handleShareClick,
+              handleSetRepresentative,
             }}
           />
         </Box>

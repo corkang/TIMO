@@ -67,6 +67,16 @@ function userReducer(user, { type, payload }) {
       return { ...user, timetables: copiedTimetables };
     }
 
+    case USER_ACTIONS.SWAP_TIMETABLE: {
+      const { index1, index2 } = payload;
+      const copiedTimetables = [...user.timetables];
+      [copiedTimetables[index1], copiedTimetables[index2]] = [
+        copiedTimetables[index2],
+        copiedTimetables[index1],
+      ];
+      return { ...user, timetables: copiedTimetables };
+    }
+
     default:
       return user;
   }
