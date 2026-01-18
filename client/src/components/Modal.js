@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2, 4, 3),
     display: 'flex',
     flexDirection: 'column',
-  
+
 
     [theme.breakpoints.down('sm')]: {
       width: 350,
@@ -25,7 +25,17 @@ const useStyles = makeStyles((theme) => ({
   },
 
   titleText: {
-    margin: '16px auto',
+    margin: '16px auto 10px',
+    color: (props) => props.titleColor || 'inherit',
+    textAlign: 'center',
+  },
+
+  contentText: {
+    textAlign: 'center',
+    marginBottom: 20,
+    whiteSpace: 'pre-line',
+    fontSize: '15px',
+    color: '#333',
   },
 
   inputBox: {
@@ -63,8 +73,8 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function MyModal({ open, isInputRequired, onSubmit, text, onClose }) {
-  const classes = useStyles();
+export default function MyModal({ open, isInputRequired, onSubmit, text = {}, onClose }) {
+  const classes = useStyles({ titleColor: text.titleColor });
 
   const inputRef = useRef();
   const [inputValue, setInputValue] = useState('');
@@ -76,9 +86,14 @@ export default function MyModal({ open, isInputRequired, onSubmit, text, onClose
   return (
     <Modal className={classes.root} open={open} onClose={onClose}>
       <Paper className={classes.modal}>
-        <Typography className={classes.titleText} variant="h3">
+        <Typography className={classes.titleText} variant="h6" style={{ fontWeight: 700, fontSize: '18px' }}>
           {text.title}
         </Typography>
+        {text.content && (
+          <Typography className={classes.contentText}>
+            {text.content}
+          </Typography>
+        )}
         {isInputRequired && (
           <form
             className={classes.inputBox}
@@ -106,7 +121,7 @@ export default function MyModal({ open, isInputRequired, onSubmit, text, onClose
             disabled={isInputRequired && inputValue.length === 0}
             onClick={() => onSubmit(inputValue)}
           >
-            <Typography variant="body2">{text.button}</Typography>
+            <Typography variant="body2" style={{ fontWeight: 700 }}>{text.button}</Typography>
           </Button>
         </Box>
       </Paper>

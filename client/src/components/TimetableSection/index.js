@@ -188,6 +188,7 @@ export default function TimetableSection({
   handleDeleteTimetableClick,
   handleEditTimetableClick,
   handleShareTimetableClick,
+  handleSetRepresentative,
   isSharePage,
 }) {
   const lecturesForTimetable = getLecturesForTimetable(lectures);
@@ -265,7 +266,7 @@ export default function TimetableSection({
           <Tabs
             value={tabIndex}
             onChange={(e, index) => setTabIndex(index)}
-            tabs={timetables.map(({ title }) => title)}
+            tabs={timetables.map(({ title }, i) => (i === 0 ? `${title} (대표)` : title))}
           />
         )}
         {!isSharePage ? (
@@ -275,6 +276,7 @@ export default function TimetableSection({
               handleDeleteTimetableClick,
               handleEditTimetableClick,
               handleShareTimetableClick,
+              handleSetRepresentative,
             }}
           />
         ) : (
@@ -336,6 +338,7 @@ export default function TimetableSection({
                       style={style}
                       key={lecture.key}
                       onMouseOver={() => setHoveredIndex(lectureId || -1)}
+                      onMouseLeave={() => setHoveredIndex(-1)}
                     >
                       <LectureGrid
                         lecture={lecture}

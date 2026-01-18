@@ -79,6 +79,12 @@ function AuthenticatedLayout({ children, logout }) {
       payload: { onSubmit: handleFeedbackReport },
     });
 
+  const openComingSoonModal = (data) =>
+    modalDispatch({
+      type: MODAL_ACTIONS.OPEN_COMING_SOON_MODAL,
+      payload: { onSubmit: closeModal, ...data },
+    });
+
   const handleFeedbackReport = (feedback) => {
     User.reportFeedback(feedback).then(() => {
       modalDispatch({
@@ -90,7 +96,11 @@ function AuthenticatedLayout({ children, logout }) {
 
   return (
     <Box className={classes.root}>
-      <Header logout={logout} openReportFeedbackModal={openReportFeedbackModal} />
+      <Header
+        logout={logout}
+        openReportFeedbackModal={openReportFeedbackModal}
+        openComingSoonModal={openComingSoonModal}
+      />
       <Box className={classes.content}>
         {children}
       </Box>
@@ -110,82 +120,82 @@ function AppRoutes() {
 
   return (
     <Switch>
-            <Route
-              exact
-              path="/login"
-              render={() => (authenticated ? <Redirect to="/timetable" /> : <LoginPage />)}
-            />
-            
-            <Route
-              exact
-              path="/"
-              render={() => (authenticated ? <Redirect to="/timetable" /> : <Redirect to="/login" />)}
-            />
+      <Route
+        exact
+        path="/login"
+        render={() => (authenticated ? <Redirect to="/timetable" /> : <LoginPage />)}
+      />
 
-            <Route
-              exact
-              path="/timetable"
-              render={() => {
-                if (!authenticated) return <Redirect to="/login" />;
-                return (
-                  <AuthenticatedLayout logout={logout}>
-                    <TimeTablePage />
-                  </AuthenticatedLayout>
-                );
-              }}
-            />
+      <Route
+        exact
+        path="/"
+        render={() => (authenticated ? <Redirect to="/timetable" /> : <Redirect to="/login" />)}
+      />
 
-            <Route
-              exact
-              path="/issac"
-              render={() => {
-                if (!authenticated) return <Redirect to="/login" />;
-                return (
-                  <AuthenticatedLayout logout={logout}>
-                    <IssacPage />
-                  </AuthenticatedLayout>
-                );
-              }}
-            />
+      <Route
+        exact
+        path="/timetable"
+        render={() => {
+          if (!authenticated) return <Redirect to="/login" />;
+          return (
+            <AuthenticatedLayout logout={logout}>
+              <TimeTablePage />
+            </AuthenticatedLayout>
+          );
+        }}
+      />
 
-            <Route
-              exact
-              path="/cart"
-              render={() => {
-                if (!authenticated) return <Redirect to="/login" />;
-                return (
-                  <AuthenticatedLayout logout={logout}>
-                    <CartPage />
-                  </AuthenticatedLayout>
-                );
-              }}
-            />
+      <Route
+        exact
+        path="/issac"
+        render={() => {
+          if (!authenticated) return <Redirect to="/login" />;
+          return (
+            <AuthenticatedLayout logout={logout}>
+              <IssacPage />
+            </AuthenticatedLayout>
+          );
+        }}
+      />
 
-            <Route
-              exact
-              path="/courseguide"
-              render={() => {
-                if (!authenticated) return <Redirect to="/login" />;
-                return (
-                  <AuthenticatedLayout logout={logout}>
-                    <CourseGuidePage />
-                  </AuthenticatedLayout>
-                );
-              }}
-            />
+      <Route
+        exact
+        path="/cart"
+        render={() => {
+          if (!authenticated) return <Redirect to="/login" />;
+          return (
+            <AuthenticatedLayout logout={logout}>
+              <CartPage />
+            </AuthenticatedLayout>
+          );
+        }}
+      />
 
-            <Route
-              exact
-              path="/review"
-              render={() => {
-                if (!authenticated) return <Redirect to="/login" />;
-                return (
-                  <AuthenticatedLayout logout={logout}>
-                    <ReviewPage />
-                  </AuthenticatedLayout>
-                );
-              }}
-            />
+      <Route
+        exact
+        path="/courseguide"
+        render={() => {
+          if (!authenticated) return <Redirect to="/login" />;
+          return (
+            <AuthenticatedLayout logout={logout}>
+              <CourseGuidePage />
+            </AuthenticatedLayout>
+          );
+        }}
+      />
+
+      <Route
+        exact
+        path="/review"
+        render={() => {
+          if (!authenticated) return <Redirect to="/login" />;
+          return (
+            <AuthenticatedLayout logout={logout}>
+              <ReviewPage />
+            </AuthenticatedLayout>
+          );
+        }}
+      />
 
       <Route path="/share/:id" component={SharePage} />
       <Route component={NotFoundPage} />

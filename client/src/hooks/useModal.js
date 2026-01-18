@@ -3,7 +3,7 @@ import { MODAL_ACTIONS } from '../commons/constants';
 
 const initialModalState = {
   open: false,
-  onSubmit: () => {},
+  onSubmit: () => { },
   isInputRequired: false,
   text: {
     title: '',
@@ -100,6 +100,27 @@ function searchReducer(state, { type, payload }) {
         isInputRequired: false,
         text: {
           title: `소중한 의견 감사합니다! 빠른 시일 내에 반영하도록 하겠습니다 😊`,
+          button: '확인',
+        },
+      });
+    }
+
+    case MODAL_ACTIONS.OPEN_COMING_SOON_MODAL: {
+      const { onSubmit, titlePrefix, content, date } = payload;
+      const targetDate = new Date(`${date}T00:00:00+09:00`);
+      const today = new Date();
+      const diffTime = targetDate - today;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      const dDayLabel = diffDays > 0 ? `D-${diffDays}` : (diffDays === 0 ? 'D-Day' : `D+${Math.abs(diffDays)}`);
+
+      return getOpenModalState({
+        onSubmit,
+        isInputRequired: false,
+        text: {
+          title: `${titlePrefix} ${dDayLabel}`,
+          titleColor: '#1A8986',
+          content: content,
           button: '확인',
         },
       });

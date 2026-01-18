@@ -57,6 +57,7 @@ export const USER_ACTIONS = {
   CREATE_TIMETABLE: 'createTimetable',
   DELETE_TIMETABLE: 'deleteTimetable',
   UPDATE_TIMETABLE: 'updateTimetable',
+  SWAP_TIMETABLE: 'swapTimetable',
 };
 
 export const SEARCH_ACTIONS = {
@@ -75,6 +76,8 @@ export const SNACKBAR_ACTIONS = {
   ALERT_PERIOD_DUP: 'alertPeriodDup',
   ALERT_SHARE_LINK_COPIED: 'alertShareLinkCopied',
   ALERT_MAX_SPIKES: 'alertMaxSpikes',
+  ALERT_ALREADY_REPRESENTATIVE: 'alertAlreadyRepresentative',
+  ALERT_SET_REPRESENTATIVE: 'alertSetRepresentative',
 };
 
 export const MODAL_ACTIONS = {
@@ -85,6 +88,7 @@ export const MODAL_ACTIONS = {
   OPEN_SHARE_TIMETABLE_MODAL: 'openShareTimetableModal',
   OPEN_FEEDBACK_MODAL: 'openFeedbackModal',
   OPEN_SUBMIT_CONFIRM_MODAL: 'openSubmitConfirmModal',
+  OPEN_COMING_SOON_MODAL: 'openComingSoonModal',
 };
 
 // 강의평 관련 상수
