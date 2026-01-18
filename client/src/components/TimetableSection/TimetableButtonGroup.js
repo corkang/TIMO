@@ -18,7 +18,17 @@ const useStyles = makeStyles((theme) => ({
   menuItem: {
     fontFamily: 'Noto Sans KR',
     fontSize: 14,
-  }
+
+    color: '#146765',
+    fontWeight: 500,
+  },
+  menuPaper: {
+    backgroundColor: 'white',
+
+    border: '1px solid #CCCCCC',
+    borderRadius: '8px',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.1)', // Optional: adjusting shadow if needed, or keeping default but adding border logic
+  },
 }));
 
 export default function TimetableButtonGroup({
@@ -78,6 +88,16 @@ export default function TimetableButtonGroup({
         keepMounted
         open={Boolean(anchorEl)}
         onClose={handleClose}
+        getContentAnchorEl={null}
+        classes={{ paper: classes.menuPaper }}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
       >
         <MenuItem onClick={onSetRepresentative} className={classes.menuItem}>대표시간표로 지정하기</MenuItem>
       </Menu>
