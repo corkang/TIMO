@@ -39,7 +39,7 @@ module.exports = () => {
             const user = await User.create({
               email: profile.emails[0].value,
             });
-            await Timetable.create({ userId: user.id, title: '1안(대표)' });
+            await Timetable.create({ userId: user.id, title: '시간표 1' });
             return next(null, user);
           }
         });
