@@ -34,7 +34,8 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     padding: '15px',
-    width: '100%', // Ensure it takes full width so we can position things relative to it if needed, or just let it expand
+    flex: 1, // Allow it to fill space but not force width
+    minWidth: 0, // Critical for text wrapping in flex items
   },
 
   row: {
@@ -108,6 +109,7 @@ const useStyles = makeStyles((theme) => ({
     minWidth: '80px', // Reserve space for buttons
     marginLeft: 'auto',
     padding: '15px 15px 15px 0',
+    flexShrink: 0, // Prevent button container from shrinking
   },
 
   addButton: {
@@ -356,11 +358,13 @@ export default function LectureCard({
             {renderCategoryTags()}
           </Box>
           <Box className={classes.row}>
-            <Typography variant="h3" className={`${classes.item} ${classes.blckText} ${classes.lecName}`}>
-              {lecture.name}
-            </Typography>
-            <Typography className={classes.lecCode}>
-              {lecture.code}
+            <Typography className={classes.item} component="div" style={{ lineHeight: '1.2' }}>
+              <span className={`${classes.blckText} ${classes.lecName}`} style={{ marginRight: '6px' }}>
+                {lecture.name}
+              </span>
+              <span className={classes.lecCode} style={{ whiteSpace: 'nowrap' }}>
+                {lecture.code}
+              </span>
             </Typography>
           </Box>
           <Box className={classes.row}>
@@ -401,11 +405,13 @@ export default function LectureCard({
           {renderCategoryTags()}
         </Box>
         <Box className={classes.row}>
-          <Typography variant="h3" className={`${classes.item} ${classes.blckText} ${classes.lecName}`}>
-            {lecture.name}
-          </Typography>
-          <Typography className={classes.lecCode}>
-            {lecture.code}
+          <Typography className={classes.item} component="div" style={{ lineHeight: '1.2' }}>
+            <span className={`${classes.blckText} ${classes.lecName}`} style={{ marginRight: '6px' }}>
+              {lecture.name}
+            </span>
+            <span className={classes.lecCode} style={{ whiteSpace: 'nowrap' }}>
+              {lecture.code}
+            </span>
           </Typography>
         </Box>
         <Box className={classes.row}>

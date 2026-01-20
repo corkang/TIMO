@@ -40,11 +40,11 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'column',
     gap: 4,
     flex: 1,
+    minWidth: 0, // Critical for text wrapping
   },
   titleRow: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 8,
+    // semantic wrapper, styles removed to allow inline behavior
+    marginBottom: '4px', // slight spacing if needed
   },
   courseName: {
     fontFamily: 'Lato',
@@ -74,6 +74,7 @@ const useStyles = makeStyles(() => ({
     alignItems: 'flex-end',
     gap: 8,
     marginLeft: 16,
+    flexShrink: 0, // Prevent right section from shrinking
   },
   viewButton: {
     backgroundColor: '#1b8986',
@@ -107,6 +108,7 @@ export default function CourseCard({
   onSelect,
   onViewReviews,
   showPeriod = true,
+  showFullCode = false,
 }) {
   const classes = useStyles();
 
@@ -135,10 +137,16 @@ export default function CourseCard({
         {/* 왼쪽: 과목 정보 */}
         <Box className={classes.leftSection}>
           <Box className={classes.titleRow}>
-            <Typography className={classes.courseName}>{course.courseName}</Typography>
-            {course.courseCode && (
-              <Typography className={classes.courseCode}>{course.courseCode.split('-')[0]}</Typography>
-            )}
+            <Typography component="div" style={{ lineHeight: '1.2', wordBreak: 'break-word' }}>
+              <span className={classes.courseName} style={{ marginRight: '6px' }}>
+                {course.courseName}
+              </span>
+              {course.courseCode && (
+                <span className={classes.courseCode} style={{ whiteSpace: 'nowrap' }}>
+                  {showFullCode ? course.courseCode : course.courseCode.split('-')[0]}
+                </span>
+              )}
+            </Typography>
           </Box>
           <Typography className={classes.professor}>{course.professor}</Typography>
           {showPeriod && formattedPeriod && (

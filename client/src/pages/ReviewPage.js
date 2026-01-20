@@ -462,6 +462,7 @@ export default function ReviewPage() {
                   course={convertLectureToCourse(lecture)}
                   onViewReviews={() => handleViewReviews(lecture)}
                   showPeriod={true}
+                  showFullCode={true}
                 />
               ))
             ) : (
