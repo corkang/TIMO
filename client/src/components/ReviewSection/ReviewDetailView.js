@@ -128,9 +128,7 @@ export default function ReviewDetailView({
             {/* Scrollable Content (Stats + Reviews) */}
             <Box className={classes.content}>
                 {/* Stats Section */}
-                <Box style={{ backgroundColor: '#fafafa', borderRadius: 16, padding: 20 }}>
-                    <CourseStats stats={stats} />
-                </Box>
+                <CourseStats stats={stats} />
 
                 <ReviewList
                     reviews={reviews}

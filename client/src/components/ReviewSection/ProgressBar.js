@@ -3,24 +3,20 @@ import { makeStyles, LinearProgress, Typography, Box } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
   container: {
-    marginBottom: 12,
+    marginBottom: 20,
+    width: '100%',
   },
-  labelRow: {
+  headerRow: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 4,
+    marginBottom: 6,
   },
-  label: {
-    fontSize: 13,
+  title: {
+    fontSize: 14,
+    fontWeight: 700,
     color: '#333',
     fontFamily: 'Noto Sans KR, sans-serif',
-  },
-  value: {
-    fontSize: 13,
-    color: '#1b8986',
-    fontFamily: 'Lato, sans-serif',
-    fontWeight: 500,
   },
   progressRoot: {
     height: 8,
@@ -31,16 +27,26 @@ const useStyles = makeStyles(() => ({
     borderRadius: 4,
     backgroundColor: '#1b8986',
   },
+  labelsRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginTop: 4,
+  },
+  subLabel: {
+    fontSize: 11,
+    color: '#888',
+    fontFamily: 'Noto Sans KR, sans-serif',
+    fontWeight: 500,
+  },
 }));
 
-export default function ProgressBar({ label, value = 0 }) {
+export default function ProgressBar({ label, value = 0, leftLabel, rightLabel, ...props }) {
   const classes = useStyles();
 
   return (
-    <Box className={classes.container}>
-      <Box className={classes.labelRow}>
-        <Typography className={classes.label}>{label}</Typography>
-        <Typography className={classes.value}>{Math.round(value)}%</Typography>
+    <Box className={classes.container} {...props}>
+      <Box className={classes.headerRow}>
+        <Typography className={classes.title}>{label}</Typography>
       </Box>
       <LinearProgress
         variant="determinate"
@@ -50,6 +56,10 @@ export default function ProgressBar({ label, value = 0 }) {
           bar: classes.progressBar,
         }}
       />
+      <Box className={classes.labelsRow}>
+        <Typography className={classes.subLabel}>{leftLabel}</Typography>
+        <Typography className={classes.subLabel}>{rightLabel}</Typography>
+      </Box>
     </Box>
   );
 }

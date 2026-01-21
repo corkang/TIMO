@@ -10,11 +10,11 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
   },
   star: {
-    color: '#1b8986',
+    color: '#F0CC18',
     fontSize: ({ size }) => size || 18,
   },
   emptyStar: {
-    color: '#ccc',
+    color: '#F0CC18',
     fontSize: ({ size }) => size || 18,
   },
   ratingText: {

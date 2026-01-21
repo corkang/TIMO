@@ -351,9 +351,8 @@ export default function ReviewWriteModal({
             error={!!errors.comment}
           />
           <Typography
-            className={`${classes.charCount} ${
-              formData.comment.length > 500 ? classes.charCountError : ''
-            }`}
+            className={`${classes.charCount} ${formData.comment.length > 500 ? classes.charCountError : ''
+              }`}
           >
             {formData.comment.length}/500
           </Typography>
