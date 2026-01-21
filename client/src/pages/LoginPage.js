@@ -84,6 +84,18 @@ const useStyles = makeStyles((theme) => ({
 
 export default function LoginPage() {
   const classes = useStyles();
+  const handleGoogleLogin = () => {
+    const ua = navigator.userAgent || window.opera;
+    const isKakao = /KAKAOTALK/i.test(ua);
+
+    if (isKakao) {
+      const cleanUrl = window.location.origin + window.location.pathname;
+      window.location.href = `kakaotalk://web/openExternal?url=${encodeURIComponent(cleanUrl)}`;
+    } else {
+      window.location.href = process.env.REACT_APP_GOOGLE_SIGNIN_URL;
+    }
+  };
+
   return (
     <div className={classes.root}>
       <div className={classes.body}>
@@ -96,12 +108,12 @@ export default function LoginPage() {
         <Button
           className={classes.loginButton}
           variant="text"
-          href={process.env.REACT_APP_GOOGLE_SIGNIN_URL}
+          onClick={handleGoogleLogin}
         >
           <img className={classes.google} alt="Google Icon" src="/google.png" />
           학교 계정으로 시작하기
         </Button>
-        
+
         {/* 카카오톡 브라우저 지원 */}
         {/* <Typography className={classes.warning}>
           {process.env.REACT_APP_HOME_ALERT_MESSAGE}
