@@ -167,8 +167,8 @@ export default function Header({ logout, openReportFeedbackModal, openComingSoon
     { label: '지연제', path: '/issac' },
     { label: '경쟁률', path: '/cart' },
     { label: '강의평', path: '/review' },
-    { label: '친구·공강', path: '/friends' },
-    { label: '책거래방', path: '/books' },
+    // { label: '친구·공강', path: '/friends' },
+    // { label: '책거래방', path: '/books' },
     { label: '수강편람', path: '/courseguide' },
   ];
 
@@ -240,7 +240,7 @@ export default function Header({ logout, openReportFeedbackModal, openComingSoon
 
   return (
     <AppBar className={classes.appBar} position={'relative'} >
-      <Box className={classes.front} onClick={() => handleNavClick('/issac')} style={{ cursor: 'pointer' }}>
+      <Box className={classes.front} onClick={() => handleNavClick('/timetable')} style={{ cursor: 'pointer' }}>
         <div>
           <img className={classes.icon} alt="티모 로고" src="/timo_logo.svg" />
         </div>

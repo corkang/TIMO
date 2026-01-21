@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     courseInfo: {
-        backgroundColor: '#F8F9FA',
+        backgroundColor: '#E8F3F3',
         padding: '16px',
         borderRadius: 8,
         marginBottom: 24,
@@ -105,8 +105,8 @@ const useStyles = makeStyles((theme) => ({
     },
     selectButton: {
         border: '1px solid #ddd',
-        padding: '6px 16px',
-        borderRadius: 20,
+        padding: '6px 10px',
+        borderRadius: 4,
         fontSize: 13,
         color: '#666',
         backgroundColor: '#fff',
@@ -124,7 +124,7 @@ const useStyles = makeStyles((theme) => ({
     commentField: {
         width: '100%',
         '& .MuiOutlinedInput-root': {
-            backgroundColor: '#FAFAFA',
+            backgroundColor: '#fff',
             '& fieldset': {
                 borderColor: '#E0E0E0',
             },
@@ -177,6 +177,7 @@ const initialFormData = {
     grading: '',
     difficulty: '',
     exams: '',
+    quiz: '',
     assignments: '',
     teamProjects: '',
     onlineOfflineRatio: '',
@@ -204,6 +205,7 @@ export default function ReviewWriteView({
                 grading: editingReview.grading,
                 difficulty: editingReview.difficulty,
                 exams: editingReview.exams,
+                quiz: editingReview.quiz,
                 assignments: editingReview.assignments,
                 teamProjects: editingReview.teamProjects,
                 onlineOfflineRatio: editingReview.onlineOfflineRatio,
@@ -238,6 +240,7 @@ export default function ReviewWriteView({
         if (!formData.grading) newErrors.grading = '성적을 선택해주세요.';
         if (!formData.difficulty) newErrors.difficulty = '난이도를 선택해주세요.';
         if (!formData.exams) newErrors.exams = '시험을 선택해주세요.';
+        if (!formData.quiz) newErrors.quiz = '퀴즈를 선택해주세요.';
         if (!formData.assignments) newErrors.assignments = '과제를 선택해주세요.';
         if (!formData.teamProjects) newErrors.teamProjects = '팀플을 선택해주세요.';
         if (!formData.onlineOfflineRatio) newErrors.onlineOfflineRatio = '온/오프라인 비율을 선택해주세요.';
@@ -296,10 +299,10 @@ export default function ReviewWriteView({
                 {/* Course Info Summary */}
                 <Box className={classes.courseInfo}>
                     <Box display="flex" alignItems="center" gap={1}>
-                        <Typography className={classes.courseName} style={{ marginBottom: 0 }}>
+                        <Typography className={classes.courseName} style={{ marginRight: 10 }}>
                             {course.courseName}
                         </Typography>
-                        <Typography variant="caption" color="textSecondary">
+                        <Typography color="textSecondary">
                             {course.courseCode}
                         </Typography>
                     </Box>
@@ -307,7 +310,7 @@ export default function ReviewWriteView({
                         {course.professor}
                     </Typography>
 
-                    <Box mt={2}>
+                    <Box mt={2} display="flex" alignItems="center" gap={1}>
                         <StarRating
                             rating={formData.rating}
                             onChange={handleChange('rating')}
@@ -315,7 +318,7 @@ export default function ReviewWriteView({
                             size={30}
                         />
                         {errors.rating && (
-                            <Typography className={classes.errorText} style={{ textAlign: 'center' }}>
+                            <Typography className={classes.errorText} style={{ marginTop: 0 }}>
                                 {errors.rating}
                             </Typography>
                         )}
@@ -332,42 +335,52 @@ export default function ReviewWriteView({
                             onChange={handleChange('comment')}
                             className={classes.commentField}
                         />
-                        <Typography className={`${classes.charCount} ${formData.comment.length > 500 ? classes.charCountError : ''}`}>
-                            {formData.comment.length}/500
-                        </Typography>
-                        {errors.comment && (
-                            <Typography className={classes.errorText}>
-                                {errors.comment}
+                        <Box display="flex" justifyContent="space-between" alignItems="center" mt={0.5}>
+                            <Box>
+                                {errors.comment && (
+                                    <Typography className={classes.errorText} style={{ marginTop: 0 }}>
+                                        {errors.comment}
+                                    </Typography>
+                                )}
+                            </Box>
+                            <Typography className={`${classes.charCount} ${formData.comment.length > 500 ? classes.charCountError : ''}`} style={{ marginTop: 0 }}>
+                                {formData.comment.length}/500
                             </Typography>
-                        )}
+                        </Box>
                     </Box>
                 </Box>
 
                 {/* Form Fields */}
                 <Box display="flex" gap={2} className={classes.formSection}>
-                    <Box flex={1}>
+                    <Box flex={1} display="flex" flexDirection="column" alignItems="flex-start">
                         <FormLabel className={classes.formLabel}>수강 학기 *</FormLabel>
                         <Select
                             value={formData.semester}
                             onChange={handleChange('semester')}
                             variant="outlined"
+                            style={{ backgroundColor: '#fff', width: '80px' }}
                             margin="dense"
-                            fullWidth
-                            style={{ backgroundColor: '#fff' }}
                         >
                             {SEMESTER_OPTIONS.map((opt) => (
                                 <MenuItem key={opt} value={opt}>{opt}</MenuItem>
                             ))}
                         </Select>
                     </Box>
+                    <Box flex={1}>
+                        {renderSelectButtons('grading', '성적', REVIEW_CRITERIA.grading)}
+                    </Box>
+                    <Box flex={1}>
+                        {renderSelectButtons('difficulty', '수업 난이도', REVIEW_CRITERIA.difficulty)}
+                    </Box>
                 </Box>
 
-                {renderSelectButtons('grading', '성적', REVIEW_CRITERIA.grading)}
-                {renderSelectButtons('difficulty', '수업 난이도', REVIEW_CRITERIA.difficulty)}
 
                 <Box display="flex" gap={2}>
                     <Box flex={1}>
                         {renderSelectButtons('exams', '시험', REVIEW_CRITERIA.exams)}
+                    </Box>
+                    <Box flex={1}>
+                        {renderSelectButtons('quiz', '퀴즈', REVIEW_CRITERIA.quiz)}
                     </Box>
                     <Box flex={1}>
                         {renderSelectButtons('assignments', '과제', REVIEW_CRITERIA.assignments)}
@@ -378,9 +391,11 @@ export default function ReviewWriteView({
                     <Box flex={1}>
                         {renderSelectButtons('teamProjects', '팀플', REVIEW_CRITERIA.teamProjects)}
                     </Box>
+                    <Box flex={1}>
+                        {renderSelectButtons('onlineOfflineRatio', '온/오프라인 비율', REVIEW_CRITERIA.onlineOfflineRatio)}
+                    </Box>
                 </Box>
 
-                {renderSelectButtons('onlineOfflineRatio', '온/오프라인 비율', REVIEW_CRITERIA.onlineOfflineRatio)}
                 {renderSelectButtons('teachingMethod', '강의 방식', REVIEW_CRITERIA.teachingMethod)}
 
                 <Button

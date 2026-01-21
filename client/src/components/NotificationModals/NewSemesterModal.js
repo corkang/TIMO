@@ -43,7 +43,7 @@ export default function NewSemesterModal({ open, onClose }) {
     <Modal className={classes.root} open={open} onClose={onClose}>
       <Paper className={classes.modal}>
         <Typography className={classes.titleText} variant="h3">
-          2025년도 2학기 서비스 안내{' '}
+          2026년도 1학기 서비스 안내{' '}
           <span role="img" aria-label="icon">
             🚀
           </span>
