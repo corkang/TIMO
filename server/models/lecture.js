@@ -19,12 +19,12 @@ class Lecture extends Model {
         maxNum: {
           type: DataTypes.INTEGER,
           defaultValue: 0,
-          allowNull: false,
+          allowNull: true,
         },
         curNum: {
           type: DataTypes.INTEGER,
           defaultValue: 0,
-          allowNull: false,
+          allowNull: true,
         },
         english: DataTypes.STRING,
         gyoyang: DataTypes.STRING,

@@ -44,6 +44,10 @@ class CourseReview extends Model {
           type: DataTypes.STRING(20),
           allowNull: false,
         },
+        quiz: {
+          type: DataTypes.STRING(20),
+          allowNull: false,
+        },
         assignments: {
           type: DataTypes.STRING(20),
           allowNull: false,

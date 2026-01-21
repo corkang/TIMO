@@ -41,6 +41,36 @@ exports.getSearchResults = async (req, res) => {
   // Get spike information
   const lecturesWithCount = await Promise.all(
     lectures.map(async (lec) => {
+      // If groupBy is true (Review Page), we only need review stats, skipping expensive timetable counts
+      if (req.query.groupBy === 'true') {
+        const reviewStatsRaw = await CourseReview.findOne({
+          where: {
+            courseName: lec.name,
+            professor: lec.professor,
+          },
+          attributes: [
+            [sequelize.fn('AVG', sequelize.col('rating')), 'avgRating'],
+            [sequelize.fn('COUNT', sequelize.col('id')), 'reviewCount'],
+          ],
+          raw: true,
+        });
+
+        const reviewStats = reviewStatsRaw ? {
+          avgRating: parseFloat(reviewStatsRaw.avgRating || 0),
+          reviewCount: parseInt(reviewStatsRaw.reviewCount || 0, 10),
+        } : null;
+
+        return {
+          ...lec.dataValues,
+          count: {
+            add: 0,
+            bookmark: 0,
+            spike: 0,
+          },
+          reviewStats,
+        };
+      }
+
       const promises = [
         // Add
         Timetable.count({

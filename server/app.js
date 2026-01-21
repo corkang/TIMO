@@ -16,7 +16,7 @@ sequelize
     console.log(err);
   });
 
-sequelize.sync({ force: false });
+sequelize.sync({ alter: true });
 
 const app = express();
 const router = require('./routes');
@@ -27,8 +27,8 @@ app.set('trust proxy', 1);
 
 app.use(cors({
   origin: process.env.NODE_ENV === 'production'
-  ? ['https://timo.handong.site', 'https://timo-six.vercel.app']
-  : ['http://localhost:8080', 'http://localhost:3000'],
+    ? ['https://timo.handong.site', 'https://timo-six.vercel.app']
+    : ['http://localhost:8080', 'http://localhost:3000'],
   credentials: true
 }));
 app.use(logger('dev'));
