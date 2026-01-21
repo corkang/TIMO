@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     border: '3px solid #B8DAD9',
     borderRadius: 16,
-    padding: '23px 25px',
+    padding: '23px 8px 23px 25px', // Removed right padding
     height: '100%',
     boxSizing: 'border-box',
   },
@@ -59,6 +59,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'space-between',
     marginBottom: 20,
     flexShrink: 0,
+    paddingRight: '25px', // Compensate for parent padding removal
   },
   sectionTitle: {
     fontFamily: 'Lato',
@@ -71,6 +72,7 @@ const useStyles = makeStyles((theme) => ({
     color: '#666',
     marginBottom: 15,
     flexShrink: 0,
+    paddingRight: '25px', // Compensate for parent padding removal
   },
   lectureList: {
     display: 'flex',
@@ -79,9 +81,11 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
     overflowY: 'auto',
     overflowX: 'hidden',
-    backgroundColor: '#F5F5F5',
-    borderRadius: '12px',
-    padding: '15px',
+    overflowY: 'auto',
+    overflowX: 'hidden',
+    // backgroundColor: '#F5F5F5', // Removed for seamless look
+    // borderRadius: '12px', // Removed for seamless look
+    padding: '5px', // Reduced padding to match SearchSection
     minHeight: 0,
     maxHeight: 'calc(100% - 80px)',
     '&::-webkit-scrollbar': {

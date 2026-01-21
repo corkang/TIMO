@@ -5,6 +5,7 @@ const initialModalState = {
   open: false,
   onSubmit: () => { },
   isInputRequired: false,
+  modalType: 'DEFAULT',
   text: {
     title: '',
     placeholder: '',
@@ -12,11 +13,12 @@ const initialModalState = {
   },
 };
 
-const getOpenModalState = ({ onSubmit, isInputRequired = true, text }) => ({
+const getOpenModalState = ({ onSubmit, isInputRequired = true, text, modalType = 'DEFAULT' }) => ({
   open: true,
   isInputRequired,
   onSubmit,
   text,
+  modalType,
 });
 
 function searchReducer(state, { type, payload }) {
@@ -85,10 +87,12 @@ function searchReducer(state, { type, payload }) {
       const { onSubmit } = payload;
       return getOpenModalState({
         onSubmit,
+        modalType: 'FEEDBACK',
         text: {
-          title: '버그나 피드백을 남겨주세요!',
-          placeholder: '버그, 피드백',
-          button: '제출',
+          title: 'TimO에게 의견 보내기',
+          caption: 'TimO를 더 나은 서비스로 만들기 위한 여러분들의 소중한 의견을 기다립니다.',
+          placeholder: '피드백이나 버그 상황을 자세히 알려주시면 더 빠르게 반영/해결할 수 있습니다!',
+          button: '제출하기',
         },
       });
     }

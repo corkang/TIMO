@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
-import { Box, Typography, makeStyles } from '@material-ui/core';
+import { Box, Typography, makeStyles, Tooltip } from '@material-ui/core';
 import Pagination from '@material-ui/lab/Pagination';
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 
 import SearchBar from './SearchBar';
 import LectureCard from './LectureCard';
@@ -27,7 +28,25 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 24,
     color: '#1A8986',
     marginBottom: '6px',
-    padding: '0 5px'
+    padding: '0 5px',
+    whiteSpace: 'nowrap',
+  },
+
+  header: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+
+  helpIcon: {
+    color: '#999',
+    cursor: 'pointer',
+    width: '20px',
+    height: '20px',
+  },
+
+  customTooltip: {
+    fontSize: '11px',
   },
 
   searchTab: {
@@ -114,7 +133,17 @@ export default function SearchSection({
 
   return (
     <Box className={classes.root}>
-      <Typography className={classes.title}>강의 검색</Typography>
+      <Box className={classes.header}>
+        <Typography className={classes.title}>강의 검색</Typography>
+        <Tooltip
+          title="담은 인원과 수강 정원은 히즈넷 정보에 따라 업데이트됩니다."
+          arrow
+          placement="bottom-end"
+          classes={{ tooltip: classes.customTooltip }}
+        >
+          <HelpOutlineIcon className={classes.helpIcon} />
+        </Tooltip>
+      </Box>
       <Box className={classes.searchBarWrapper}>
         <SearchBar {...{ handleSearchSubmit }} />
       </Box>

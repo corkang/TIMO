@@ -113,8 +113,8 @@ export const REVIEW_CRITERIA = {
   difficulty: ['easy', 'normal', 'hard'],
   exams: ['none', 'normal', 'hard'],
   quiz: ['none', 'normal', 'hard'],
-  assignments: ['heavy', 'normal', 'none'],
-  teamProjects: ['heavy', 'normal', 'none'],
+  assignments: ['none', 'normal', 'heavy'],
+  teamProjects: ['none', 'normal', 'heavy'],
   onlineOfflineRatio: ['offline', 'half', 'online'],
   teachingMethod: ['theory', 'discussion', 'project'],
 };
