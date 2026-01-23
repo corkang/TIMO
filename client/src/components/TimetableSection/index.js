@@ -57,15 +57,23 @@ const useStyles = makeStyles((theme) => ({
 
   timetableBody: {
     width: '100%',
-    flex: 1,
+    flex: '0 1 auto',
     position: 'relative',
     overflowY: 'scroll',
     display: 'flex',
+    flexDirection: 'column',
     borderTop: '1px solid #eaedf1',
     borderLeft: '1px solid #eaedf1',
     borderBottom: '1px solid #eaedf1',
     backgroundColor: 'white',
     borderRadius: 16,
+  },
+
+  gridContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    width: '100%',
+    position: 'relative',
   },
 
   timeColumn: {
@@ -159,6 +167,22 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     marginRight: '5px',
   },
+
+  emptyLectureRow: {
+    width: '100%',
+    padding: '10px 15px',
+    borderTop: '1px solid #f0f0f0', // Separator between rows
+    fontSize: '0.85rem',
+    color: '#333',
+    cursor: 'pointer',
+    '&:hover': {
+      backgroundColor: '#f9f9f9',
+    },
+    display: 'flex',
+    alignItems: 'center',
+    boxSizing: 'border-box',
+    minHeight: '40px',
+  },
 }));
 
 const getLecturesForTimetable = (lectures = []) => {
@@ -212,8 +236,13 @@ export default function TimetableSection({
   };
 
   // Determine visible time range
-  const periods = Object.keys(lecturesForTimetable).map(k => parsePeriodKey(k).period);
+  const periods = Object.keys(lecturesForTimetable)
+    .filter((k) => k !== 'EMPTY' && k !== 'null')
+    .map((k) => parsePeriodKey(k).period)
+    .filter((p) => !isNaN(p));
   const maxPeriod = periods.length > 0 ? Math.max(...periods) : 0;
+
+  const emptyLectures = lectures.filter((l) => !l.period || l.period === 'EMPTY');
 
   // Check for Saturday classes
   const hasSaturday = Object.keys(lecturesForTimetable).some(key => key.startsWith('토'));
@@ -285,75 +314,91 @@ export default function TimetableSection({
       </Box>
 
       <Box className={classes.timetableBody} id="timetable-grid">
-        {/* Time Column */}
-        <Box className={classes.timeColumn} style={{ minHeight: gridMinHeight }}>
-          {Array.from({ length: hoursCount }).map((_, i) => (
-            <Box key={i} className={classes.timeSlot}>
-              <span>
-                {startHour + i}
-              </span>
-            </Box>
-          ))}
-        </Box>
-
-        {/* Day Columns */}
-        <Box className={classes.columnsContainer} style={{ minHeight: gridMinHeight }}>
-          {visibleDays.slice(1).map((day, dayIndex) => { // '월', '화' ...
-            // Find lectures for this day
-            // We iterate all lecturesForTimetable and filter those on this day
-            // This is slightly inefficient but given N is small (max 9 periods * 5 days), it's fine.
-            // Or better: iterate 1..9 periods and check if key exists.
-
-            const lecturesOnDay = [];
-            for (let p = 1; p <= MAX_PERIOD; p++) {
-              const key = `${day}${p}`;
-              if (lecturesForTimetable[key]) {
-                lecturesOnDay.push({
-                  ...lecturesForTimetable[key],
-                  periodNum: p,
-                  key: key
-                });
-              }
-            }
-
-            return (
-              <Box className={classes.dayColumn} key={dayIndex} style={{ backgroundSize: `100% ${(100 / hoursCount)}%` }}>
-                {lecturesOnDay.map((lecture) => {
-                  const style = getLectureStyle(lecture.periodNum);
-
-                  // Check if connected (same lecture in prev period) - though logic changes with time-based
-                  // In time-based, lectures are distinct blocks unless we merge them.
-                  // But usually continuous periods are just one long block?
-                  // The user request images imply standard separate blocks but if they are continuous...
-                  // The current data structure splits them by period.
-                  // If "Period 1" and "Period 2" are the same lecture, they will appear as two blocks.
-                  // Period 1 ends at 9:45, Period 2 starts at 10:00. Use gap is visible.
-                  // So we just render distinct blocks.
-
-                  const lectureId = lecture.id;
-
-                  return (
-                    <Box
-                      className={classes.lectureBlock}
-                      style={style}
-                      key={lecture.key}
-                      onMouseOver={() => setHoveredIndex(lectureId || -1)}
-                      onMouseLeave={() => setHoveredIndex(-1)}
-                    >
-                      <LectureGrid
-                        lecture={lecture}
-                        handleDeleteClick={isSharePage ? undefined : handleDeleteLectureClick}
-                        bgColor={getBgColor(lectureId)}
-                        isHovered={hoveredIndex === lectureId}
-                        isConnected={false} // No longer need visual connecting logic as they are time-speicific blocks
-                      />
-                    </Box>
-                  );
-                })}
+        <Box className={classes.gridContainer}>
+          {/* Time Column */}
+          <Box className={classes.timeColumn} style={{ minHeight: gridMinHeight }}>
+            {Array.from({ length: hoursCount }).map((_, i) => (
+              <Box key={i} className={classes.timeSlot}>
+                <span>{startHour + i}</span>
               </Box>
-            );
-          })}
+            ))}
+          </Box>
+
+          {/* Day Columns */}
+          <Box className={classes.columnsContainer} style={{ minHeight: gridMinHeight }}>
+            {visibleDays.slice(1).map((day, dayIndex) => {
+              // '월', '화' ...
+              // Find lectures for this day
+              // We iterate all lecturesForTimetable and filter those on this day
+              // This is slightly inefficient but given N is small (max 9 periods * 5 days), it's fine.
+              // Or better: iterate 1..9 periods and check if key exists.
+
+              const lecturesOnDay = [];
+              for (let p = 1; p <= MAX_PERIOD; p++) {
+                const key = `${day}${p}`;
+                if (lecturesForTimetable[key]) {
+                  lecturesOnDay.push({
+                    ...lecturesForTimetable[key],
+                    periodNum: p,
+                    key: key,
+                  });
+                }
+              }
+
+              return (
+                <Box
+                  className={classes.dayColumn}
+                  key={dayIndex}
+                  style={{ backgroundSize: `100% ${100 / hoursCount}%` }}
+                >
+                  {lecturesOnDay.map((lecture) => {
+                    const style = getLectureStyle(lecture.periodNum);
+
+                    // Check if connected (same lecture in prev period) - though logic changes with time-based
+                    // In time-based, lectures are distinct blocks unless we merge them.
+                    // But usually continuous periods are just one long block?
+                    // The user request images imply standard separate blocks but if they are continuous...
+                    // The current data structure splits them by period.
+                    // If "Period 1" and "Period 2" are the same lecture, they will appear as two blocks.
+                    // Period 1 ends at 9:45, Period 2 starts at 10:00. Use gap is visible.
+                    // So we just render distinct blocks.
+
+                    const lectureId = lecture.id;
+
+                    return (
+                      <Box
+                        className={classes.lectureBlock}
+                        style={style}
+                        key={lecture.key}
+                        onMouseOver={() => setHoveredIndex(lectureId || -1)}
+                        onMouseLeave={() => setHoveredIndex(-1)}
+                      >
+                        <LectureGrid
+                          lecture={lecture}
+                          handleDeleteClick={isSharePage ? undefined : handleDeleteLectureClick}
+                          bgColor={getBgColor(lectureId)}
+                          isHovered={hoveredIndex === lectureId}
+                          isConnected={false} // No longer need visual connecting logic as they are time-speicific blocks
+                        />
+                      </Box>
+                    );
+                  })}
+                </Box>
+              );
+            })}
+          </Box>
         </Box>
+
+        {/* Empty Lectures List */}
+        {emptyLectures.map((lecture) => (
+          <Box
+            key={lecture.id}
+            className={classes.emptyLectureRow}
+            onClick={() => !isSharePage && handleDeleteLectureClick && handleDeleteLectureClick(lecture)}
+          >
+            {lecture.name}
+          </Box>
+        ))}
       </Box>
       {!isSharePage && (
         <Box className={classes.bottomBar}>
