@@ -7,10 +7,15 @@ export const isIn = (item, arr, prop) => {
 };
 
 export const isPeriodDup = (lecture, timetableLectures) => {
+  if (!lecture.period || lecture.period === 'EMPTY') return false;
   return timetableLectures.reduce(
-    (isDup, { period: periods }) =>
-      isDup ||
-      lecture.period.split(',').reduce((isDup, period) => isDup || periods.includes(period), false),
+    (isDup, { period: periods }) => {
+      if (!periods || periods === 'EMPTY') return isDup;
+      return (
+        isDup ||
+        lecture.period.split(',').reduce((isDup, period) => isDup || periods.includes(period), false)
+      );
+    },
     false,
   );
 };
