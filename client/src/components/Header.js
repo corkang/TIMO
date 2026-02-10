@@ -165,10 +165,10 @@ export default function Header({ logout, openReportFeedbackModal, openComingSoon
   const navItems = [
     { label: '시간표', path: '/timetable' },
     { label: '지연제', path: '/issac' },
-    { label: '경쟁률', path: '/cart' },
+    // { label: '경쟁률', path: '/cart' },
     { label: '강의평', path: '/review' },
-    // { label: '친구·공강', path: '/friends' },
-    // { label: '책거래방', path: '/books' },
+    { label: '친구·공강', path: '/friends' },
+    { label: '책거래방', path: '/books' },
     { label: '수강편람', path: '/courseguide' },
   ];
 
@@ -179,34 +179,34 @@ export default function Header({ logout, openReportFeedbackModal, openComingSoon
   }, []);
 
   const handleNavClick = (path) => {
-    if (path === '/issac') {
-      openComingSoonModal({
-        titlePrefix: '🛎️ 지연제',
-        content: (
-          <>
-            빈 자리가 발생하면 수강신청 지연제 시간에 맞추어{'\n'}
-            메일로 알려드리는 기능이 곧 열릴 예정입니다.{'\n'}
-            <span style={{ color: '#1A8986' }}>1월 26일</span>에 만나요!
-          </>
-        ),
-        date: '2026-01-26',
-      });
-      return;
-    }
-    if (path === '/cart') {
-      openComingSoonModal({
-        titlePrefix: '📊 경쟁률',
-        content: (
-          <>
-            담아둔 강의의 경쟁률을 계산해 신청 우선순위를{'\n'}
-            알려주는 기능이 곧 열릴 예정입니다.{'\n'}
-            <span style={{ color: '#1A8986' }}>1월 26일</span>에 만나요!
-          </>
-        ),
-        date: '2026-01-26',
-      });
-      return;
-    }
+    // if (path === '/issac') {
+    //   openComingSoonModal({
+    //     titlePrefix: '🛎️ 지연제',
+    //     content: (
+    //       <>
+    //         빈 자리가 발생하면 수강신청 지연제 시간에 맞추어{'\n'}
+    //         메일로 알려드리는 기능이 곧 열릴 예정입니다.{'\n'}
+    //         <span style={{ color: '#1A8986' }}>1월 26일</span>에 만나요!
+    //       </>
+    //     ),
+    //     date: '2026-01-26',
+    //   });
+    //   return;
+    // }
+    // if (path === '/cart') {
+    //   openComingSoonModal({
+    //     titlePrefix: '📊 경쟁률',
+    //     content: (
+    //       <>
+    //         담아둔 강의의 경쟁률을 계산해 신청 우선순위를{'\n'}
+    //         알려주는 기능이 곧 열릴 예정입니다.{'\n'}
+    //         <span style={{ color: '#1A8986' }}>1월 26일</span>에 만나요!
+    //       </>
+    //     ),
+    //     date: '2026-01-26',
+    //   });
+    //   return;
+    // }
     if (path === '/friends') {
       openComingSoonModal({
         titlePrefix: '👥 친구·공강',
@@ -214,10 +214,10 @@ export default function Header({ logout, openReportFeedbackModal, openComingSoon
           <>
             친구와 시간표를 비교하고, 공통으로 공강인{'\n'}
             시간을 찾아주는 기능이 곧 열릴 예정입니다.{'\n'}
-            <span style={{ color: '#1A8986' }}>2월 7일</span>에 만나요!
+            <span style={{ color: '#1A8986' }}>2월 14일</span>에 만나요!
           </>
         ),
-        date: '2026-02-07',
+        date: '2026-02-14',
       });
       return;
     }
