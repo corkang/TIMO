@@ -235,6 +235,24 @@ const useStyles = makeStyles((theme) => ({
     color: '#1A8986',
     marginLeft: '10px',
   },
+
+  // Spike page specific styles
+  spikeNumColumn: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    padding: '15px 10px',
+    flexShrink: 0,
+    gap: 4,
+  },
+
+  spikeNumText: {
+    fontSize: 13,
+    fontWeight: 500,
+    color: '#333333',
+    whiteSpace: 'nowrap',
+  },
 }));
 
 /**
@@ -252,6 +270,7 @@ export default function LectureCard({
   onDeleteSpikeClick,
   showCompetitionRate = false,
   isCartPage = false,
+  showTags = true,
 }) {
   const classes = useStyles();
 
@@ -297,9 +316,12 @@ export default function LectureCard({
 
   const DeleteButtonGroup = (onClick, title) => {
     return (
-      <Box className={classes.buttonBox}>
-        <Button className={classes.textButton} onClick={onClick}>
-          삭제
+      <Box className={classes.buttonBox} >
+        <Button 
+          className={classes.textButton} 
+          style={{ backgroundColor: '#DDEDED', color: '#146765' }} 
+          onClick={onClick}
+        >알림 해제
         </Button>
       </Box>
     );
@@ -349,14 +371,68 @@ export default function LectureCard({
     );
   };
 
+  // Spike page specific render (SPIKE_ADD, SPIKES)
+  const isSpikeTab = searchTab === SEARCH_TABS.SPIKE_ADD || searchTab === SEARCH_TABS.SPIKES;
+  if (isSpikeTab) {
+    return (
+      <Box className={classes.root} id={lecture.id}>
+        {/* 과목 정보 column */}
+        <Box className={classes.column}>
+          <Box className={classes.row}>
+            <Typography className={classes.item} component="div" style={{ lineHeight: '1.2' }}>
+              <span className={`${classes.blckText} ${classes.lecName}`} style={{ marginRight: '6px' }}>
+                {lecture.name}
+              </span>
+              <span className={classes.lecCode} style={{ whiteSpace: 'nowrap' }}>
+                {lecture.code}
+              </span>
+            </Typography>
+          </Box>
+          <Box className={classes.row}>
+            <Typography className={`${classes.item} ${classes.lecProf}`}>
+              {lecture.professor}
+            </Typography>
+          </Box>
+          <Box className={classes.row}>
+            <Typography>{lecture.period.replace(',', '/')}</Typography>
+            <Typography className={classes.item}>{', ' + lecture.credit}학점</Typography>
+          </Box>
+        </Box>
+
+        {/* 담은 인원 / 수강 정원 column */}
+        <Box className={classes.spikeNumColumn}>
+          {(() => {
+            const isFull = (lecture.curNum || 0) >= (lecture.maxNum || 0);
+            const numColor = isFull ? '#D92929' : '#444444';
+            return (
+                <Typography className={classes.spikeNumText} style={{ color: numColor }}>담은 인원 {lecture.curNum || 0} / 수강 정원 {lecture.maxNum || 0}</Typography>
+            );
+          })()}
+        </Box>
+
+        {/* 버튼 column */}
+        <Switch>
+          <Case condition={searchTab === SEARCH_TABS.SPIKE_ADD}>
+            {SpikeAddButtonGroup()}
+          </Case>
+          <Case condition={searchTab === SEARCH_TABS.SPIKES}>
+            {DeleteButtonGroup(onDeleteSpikeClick, '이삭 줍기에서 삭제')}
+          </Case>
+        </Switch>
+      </Box>
+    );
+  }
+
   // Cart page specific render
   if (isCartPage) {
     return (
       <Box className={`${classes.root} ${classes.cartRoot}`} id={lecture.id}>
         <Box className={classes.column}>
-          <Box className={classes.categoryRow}>
-            {renderCategoryTags()}
-          </Box>
+          {showTags && (
+            <Box className={classes.categoryRow}>
+              {renderCategoryTags()}
+            </Box>
+          )}
           <Box className={classes.row}>
             <Typography className={classes.item} component="div" style={{ lineHeight: '1.2' }}>
               <span className={`${classes.blckText} ${classes.lecName}`} style={{ marginRight: '6px' }}>
@@ -401,9 +477,11 @@ export default function LectureCard({
   return (
     <Box className={classes.root} id={lecture.id}>
       <Box className={classes.column}>
-        <Box className={classes.categoryRow}>
-          {renderCategoryTags()}
-        </Box>
+        {showTags && (
+          <Box className={classes.categoryRow}>
+            {renderCategoryTags()}
+          </Box>
+        )}
         <Box className={classes.row}>
           <Typography className={classes.item} component="div" style={{ lineHeight: '1.2' }}>
             <span className={`${classes.blckText} ${classes.lecName}`} style={{ marginRight: '6px' }}>
