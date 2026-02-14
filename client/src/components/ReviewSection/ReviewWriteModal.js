@@ -101,8 +101,11 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   selectControl: {
-    minWidth: 150,
+    // width: 500,
     marginBottom: 20,
+  },
+  select: {
+    width: 150,
   },
   commentField: {
     '& .MuiOutlinedInput-root': {
@@ -300,10 +303,11 @@ export default function ReviewWriteModal({
         <FormControl className={classes.selectControl}>
           <FormLabel className={classes.formLabel}>수강 학기</FormLabel>
           <Select
+            className={classes.select}
             value={formData.semester}
             onChange={handleChange('semester')}
             variant="outlined"
-            size="small"
+            // size="small"
           >
             {SEMESTER_OPTIONS.map((option) => (
               <MenuItem key={option} value={option}>
