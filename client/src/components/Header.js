@@ -168,7 +168,7 @@ export default function Header({ logout, openReportFeedbackModal, openComingSoon
     // { label: '경쟁률', path: '/cart' },
     { label: '강의평', path: '/review' },
     { label: '친구·공강', path: '/friends' },
-    { label: '책거래방', path: '/books' },
+    // { label: '책거래방', path: '/books' },
     { label: '수강편람', path: '/courseguide' },
   ];
 
@@ -214,27 +214,27 @@ export default function Header({ logout, openReportFeedbackModal, openComingSoon
           <>
             친구와 시간표를 비교하고, 공통으로 공강인{'\n'}
             시간을 찾아주는 기능이 곧 열릴 예정입니다.{'\n'}
-            <span style={{ color: '#1A8986' }}>2월 14일</span>에 만나요!
+            <span style={{ color: '#1A8986' }}>2월 20일</span>에 만나요!
           </>
         ),
-        date: '2026-02-14',
+        date: '2026-02-20',
       });
       return;
     }
-    if (path === '/books') {
-      openComingSoonModal({
-        titlePrefix: '📚 책거래방',
-        content: (
-          <>
-            학부·과목별로 중고 교재를 거래할 수 있는{'\n'}
-            책거래방이 곧 열릴 예정입니다.{'\n'}
-            <span style={{ color: '#1A8986' }}>2월 18일</span>에 만나요!
-          </>
-        ),
-        date: '2026-02-18',
-      });
-      return;
-    }
+    // if (path === '/books') {
+    //   openComingSoonModal({
+    //     titlePrefix: '📚 책거래방',
+    //     content: (
+    //       <>
+    //         학부·과목별로 중고 교재를 거래할 수 있는{'\n'}
+    //         책거래방이 곧 열릴 예정입니다.{'\n'}
+    //         <span style={{ color: '#1A8986' }}>2월 18일</span>에 만나요!
+    //       </>
+    //     ),
+    //     date: '2026-02-18',
+    //   });
+    //   return;
+    // }
     history.push(path);
   };
 
