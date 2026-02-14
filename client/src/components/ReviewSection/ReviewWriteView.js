@@ -358,7 +358,7 @@ export default function ReviewWriteView({
                             value={formData.semester}
                             onChange={handleChange('semester')}
                             variant="outlined"
-                            style={{ backgroundColor: '#fff', width: '80px' }}
+                            style={{ backgroundColor: '#fff', width: '120px' }}
                             margin="dense"
                         >
                             {SEMESTER_OPTIONS.map((opt) => (

@@ -164,25 +164,26 @@ export const REVIEW_LABELS = {
 };
 
 // 학기 옵션 생성 (최근 4학기)
-export const SEMESTER_OPTIONS = (() => {
-  const now = new Date();
-  const year = now.getFullYear() % 100;
-  const month = now.getMonth() + 1;
-  const currentSemester = month >= 7 ? 2 : 1;
-  const options = [];
+export const SEMESTER_OPTIONS = ["25-2", "25-1", "24-2", "24-1", "23년도 이전"]
+// export const SEMESTER_OPTIONS = (() => {
+//   const now = new Date();
+//   const year = now.getFullYear() % 100;
+//   const month = now.getMonth() + 1;
+//   const currentSemester = month >= 7 ? 2 : 1;
+//   const options = [];
 
-  for (let i = 0; i < 4; i++) {
-    let y = year;
-    let s = currentSemester;
-    s -= i;
-    while (s <= 0) {
-      s += 2;
-      y -= 1;
-    }
-    options.push(`${y}-${s}`);
-  }
-  return options;
-})();
+//   for (let i = 0; i < 4; i++) {
+//     let y = year;
+//     let s = currentSemester;
+//     s -= i;
+//     while (s <= 0) {
+//       s += 2;
+//       y -= 1;
+//     }
+//     options.push(`${y}-${s}`);
+//   }
+//   return options;
+// })();
 
 // 정렬 옵션
 export const REVIEW_SORT_OPTIONS = [
