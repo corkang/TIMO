@@ -31,6 +31,26 @@ class Lecture extends Model {
         grading: DataTypes.STRING,
         pfPossible: DataTypes.BOOLEAN,
         crawledAt: DataTypes.DATEONLY,
+        isFull: {
+          type: DataTypes.INTEGER,
+          defaultValue: 0,
+        },
+        newSeat: {
+          type: DataTypes.STRING,
+          defaultValue: null,
+        },
+        waitingNum: {
+          type: DataTypes.INTEGER,
+          defaultValue: 0,
+        },
+        hasWaitingUser: {
+          type: DataTypes.BOOLEAN,
+          defaultValue: false,
+        },
+        spikeEmailCount: {
+          type: DataTypes.INTEGER,
+          defaultValue: 0,
+        },
       },
       {
         tableName: 'Lecture',

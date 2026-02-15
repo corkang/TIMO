@@ -6,6 +6,19 @@ const UserLectureRelation = require('../models/user_lecture_relation');
 const UserLectureGleaningRelation = require('../models/user_lecture_gleaning_relation');
 const CourseReview = require('../models/course_review');
 
+async function syncLectureWaitingStatus(lectureId) {
+  const waitingCount = await UserLectureGleaningRelation.count({
+    where: { lectureId },
+  });
+  await Lecture.update(
+    {
+      waitingNum: waitingCount,
+      hasWaitingUser: waitingCount > 0,
+    },
+    { where: { id: lectureId } },
+  );
+}
+
 exports.getUser = async (req, res) => {
   await User.update(
     {
@@ -99,20 +112,24 @@ exports.unbookmarkLecture = async (req, res) => {
 };
 
 exports.addSpikeLecture = async (req, res) => {
+  const lectureId = +req.params.lectureId;
   await UserLectureGleaningRelation.create({
     userId: req.user.id,
-    lectureId: +req.params.lectureId,
+    lectureId,
   });
+  await syncLectureWaitingStatus(lectureId);
   res.send('complete');
 };
 
 exports.deleteSpikeLecture = async (req, res) => {
+  const lectureId = +req.params.lectureId;
   await UserLectureGleaningRelation.destroy({
     where: {
       userId: req.user.id,
-      lectureId: +req.params.lectureId,
+      lectureId,
     },
   });
+  await syncLectureWaitingStatus(lectureId);
   res.send('complete');
 };
 
