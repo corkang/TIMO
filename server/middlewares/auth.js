@@ -13,8 +13,9 @@ const JWTVerify = async ({ userId }, done) => {
     if (user) {
       done(null, user);
       return;
+    } else {
+      done(null, false, { reason: '올바르지 않은 인증정보 입니다.' });
     }
-    done(null, false, { reason: '올바르지 않은 인증정보 입니다.' });
   } catch (error) {
     console.error(error);
     done(error);

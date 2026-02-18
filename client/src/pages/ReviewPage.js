@@ -44,6 +44,9 @@ const useStyles = makeStyles((theme) => ({
     padding: '23px 8px 23px 25px', // Removed right padding
     height: '100%',
     boxSizing: 'border-box',
+    [theme.breakpoints.down('sm')]: {
+      display: 'none',
+    },
   },
   rightSection: {
     flex: '0 0 60%',
@@ -52,6 +55,10 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     height: '100%',
     overflow: 'hidden',
+    [theme.breakpoints.down('sm')]: {
+      flex: '1 1 auto',
+      height: 'calc(100vh - 200px)',
+    },
   },
   sectionHeader: {
     display: 'flex',
@@ -107,6 +114,9 @@ const useStyles = makeStyles((theme) => ({
     width: '45%',
     marginBottom: 16,
     flexShrink: 0,
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
   },
   searchField: {
     '& .MuiOutlinedInput-root': {
@@ -157,6 +167,7 @@ const useStyles = makeStyles((theme) => ({
     overflowY: 'auto',
     overflowX: 'hidden',
     paddingRight: 8,
+    WebkitOverflowScrolling: 'touch',
     '&::-webkit-scrollbar': {
       width: '8px',
     },
@@ -169,6 +180,11 @@ const useStyles = makeStyles((theme) => ({
       borderRadius: '10px',
       '&:hover': {
         backgroundColor: '#156E6B',
+      },
+    },
+    [theme.breakpoints.down('sm')]: {
+      '&::-webkit-scrollbar': {
+        width: '4px',
       },
     },
   },

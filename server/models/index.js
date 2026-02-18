@@ -6,7 +6,7 @@ const Sequelize = require('sequelize');
 const basename = path.basename(__filename);
 const db = {};
 
-const { DB_HOST, DB_NAME, DB_USER, DB_PW, DB_PORT } = process.env;
+const { DB_HOST, DB_NAME, DB_USER, DB_PW, DB_PORT, SSL_CA_CERT } = process.env;
 
 const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PW, {
   host: DB_HOST,
@@ -18,6 +18,13 @@ const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PW, {
     connectionLimit: 10,
     queueLimit: 0,
   },
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+      ca: SSL_CA_CERT,
+    }
+  }
 });
 
 fs.readdirSync(__dirname)
