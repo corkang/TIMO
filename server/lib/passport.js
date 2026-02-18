@@ -11,7 +11,7 @@ const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_CALLBACK_URL } = process.
 // Force HTTPS for production callback URL
 const getCallbackURL = () => {
   if (process.env.NODE_ENV !== 'production') {
-    return `http://localhost:${process.env.PORT || 3000}/auth/google/callback`;
+    return `http://localhost:${process.env.PORT || 3000}/api/auth/google/callback`;
   }
 
   if (!GOOGLE_CALLBACK_URL) return undefined;

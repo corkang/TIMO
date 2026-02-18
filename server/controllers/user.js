@@ -145,6 +145,14 @@ exports.getBookmarks = async (req, res) => {
   res.send(userBookmarks.lectures);
 };
 
+exports.consentSpikeEmail = async (req, res) => {
+  await User.update(
+    { spikeEmailConsent: true },
+    { where: { id: req.user.id } },
+  );
+  res.send('complete');
+};
+
 exports.createFeedback = async (req, res) => {
   await Feedback.create({
     userId: req.user.id,

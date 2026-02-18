@@ -10,6 +10,10 @@ class User extends Model {
           type: DataTypes.INTEGER,
           defaultValue: 0,
         },
+        spikeEmailConsent: {
+          type: DataTypes.BOOLEAN,
+          defaultValue: false,
+        },
       },
       {
         tableName: 'User',
