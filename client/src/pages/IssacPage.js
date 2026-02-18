@@ -1,11 +1,23 @@
-import React from 'react';
-import { Box, Typography, makeStyles, Divider } from '@material-ui/core';
+import React, { useState } from 'react';
+import {
+  Box,
+  Typography,
+  makeStyles,
+  Divider,
+  IconButton,
+  useMediaQuery,
+  useTheme,
+} from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
 import NotificationsIcon from '@material-ui/icons/Notifications';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import { useUser } from '../hooks';
 import { USER_ACTIONS } from '../commons/constants';
 import { User, SpikeLecture } from '../models';
 import LectureCard from '../components/SearchSection/LectureCard';
 import { SEARCH_TABS } from '../commons/constants';
+import SpikeEmailConsentModal from '../components/NotificationModals/SpikeEmailConsentModal';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,6 +43,22 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#F2F2F2',
     borderRadius: '20px',
     padding: 30,
+    [theme.breakpoints.down('sm')]: {
+      flex: '0 0 auto',
+      width: '100%',
+      padding: '20px 20px',
+    },
+  },
+
+  leftSectionHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+
+  toggleButton: {
+    padding: 4,
+    color: '#666',
   },
 
   rightSection: {
@@ -42,6 +70,10 @@ const useStyles = makeStyles((theme) => ({
     border: '3px solid #B8DAD9',
     borderRadius: 16,
     padding: '23px 25px',
+    [theme.breakpoints.down('sm')]: {
+      flex: '0 0 auto',
+      width: '100%',
+    },
   },
 
   sectionTitle: {
@@ -198,7 +230,25 @@ const TIME_SLOTS = [
  */
 export default function IssacPage() {
   const classes = useStyles();
-  const [{ timetables, spikes = [] }, userDispatch] = useUser();
+  const theme = useTheme();
+  const history = useHistory();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [timeSlotOpen, setTimeSlotOpen] = useState(false);
+  const [{ id: userId, timetables, spikes = [], spikeEmailConsent }, userDispatch] = useUser();
+  const [consentGranted, setConsentGranted] = useState(false);
+
+  const userLoaded = !!userId;
+  const showConsentModal = userLoaded && !spikeEmailConsent && !consentGranted;
+
+  const handleConsent = () => {
+    User.consentSpikeEmail().then(() => {
+      setConsentGranted(true);
+    });
+  };
+
+  const handleCancel = () => {
+    history.goBack();
+  };
 
   // Get first timetable (예비시간표1) lectures
   const firstTimetableLectures = timetables[0]?.lectures || [];
@@ -228,31 +278,50 @@ export default function IssacPage() {
 
   return (
     <Box className={classes.root}>
+      <SpikeEmailConsentModal
+        open={showConsentModal}
+        onConsent={handleConsent}
+        onCancel={handleCancel}
+      />
       <Box className={classes.body}>
         {/* Left Section: Time Slot Notifications */}
         <Box className={classes.leftSection}>
-          <Typography className={classes.sectionTitle}>
-            <span 
-              className={classes.highlight}
-              style={{ '--highlight-color': '#B8DAD9' }}
-            >취소 시간별 알림 시간</span>
-          </Typography>
-          <Typography className={classes.sectionSubTitle} style={{ color: '#333333', marginBottom: 20 }}>* 히즈넷 취소지연제 공지 기준으로 운영됩니다</Typography>
-          {TIME_SLOTS.map((slot, index) => (
-            <Box key={index} className={classes.timeSlotCard}>
-              <Box className={classes.timeSlotBadge}>
-                <Typography className={classes.timeSlotBadgeText}>{slot.round} ({slot.number})</Typography>
-              </Box>
-              <Box className={classes.timeSlotContent}>
-                <Typography className={classes.timeSlotInfo}>
-                  <span style={{fontWeight: 700}}>{slot.period}</span> 사이 취소
-                </Typography>
-                <Typography className={classes.timeSlotNotice}>
-                  → {slot.openTime} <span style={{ color: '#333333', fontWeight: 500 }}>오픈 |</span> <NotificationsIcon style={{ fontSize: 16, color: '#D92929', verticalAlign: '-2.1' }} /> <span style={{color: '#D92929'}}>{slot.alertTime}</span>
-                </Typography>
-              </Box>
-            </Box>
-          ))}
+          <Box className={classes.leftSectionHeader}>
+            <Typography className={classes.sectionTitle}>
+              <span
+                className={classes.highlight}
+                style={{ '--highlight-color': '#B8DAD9' }}
+              >취소 시간별 알림 시간</span>
+            </Typography>
+            {isMobile && (
+              <IconButton
+                className={classes.toggleButton}
+                onClick={() => setTimeSlotOpen((prev) => !prev)}
+              >
+                {timeSlotOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+              </IconButton>
+            )}
+          </Box>
+          {(!isMobile || timeSlotOpen) && (
+            <>
+              <Typography className={classes.sectionSubTitle} style={{ color: '#333333', marginBottom: 20 }}>* 히즈넷 취소지연제 공지 기준으로 운영됩니다</Typography>
+              {TIME_SLOTS.map((slot, index) => (
+                <Box key={index} className={classes.timeSlotCard}>
+                  <Box className={classes.timeSlotBadge}>
+                    <Typography className={classes.timeSlotBadgeText}>{slot.round} ({slot.number})</Typography>
+                  </Box>
+                  <Box className={classes.timeSlotContent}>
+                    <Typography className={classes.timeSlotInfo}>
+                      <span style={{fontWeight: 700}}>{slot.period}</span> 사이 취소
+                    </Typography>
+                    <Typography className={classes.timeSlotNotice}>
+                      → {slot.openTime} <span style={{ color: '#333333', fontWeight: 500 }}>오픈 |</span> <NotificationsIcon style={{ fontSize: 16, color: '#D92929', verticalAlign: '-2.1' }} /> <span style={{color: '#D92929'}}>{slot.alertTime}</span>
+                    </Typography>
+                  </Box>
+                </Box>
+              ))}
+            </>
+          )}
         </Box>
 
         {/* Right Section: Course Selection and History */}
