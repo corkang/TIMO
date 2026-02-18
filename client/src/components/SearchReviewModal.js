@@ -21,6 +21,14 @@ const useStyles = makeStyles((theme) => ({
         pointerEvents: 'auto',
         overflow: 'hidden',
         padding: '50px 24px 24px 24px',
+        [theme.breakpoints.down('sm')]: {
+            position: 'fixed',
+            top: '50% !important',
+            left: '50% !important',
+            transform: 'translate(-50%, -50%)',
+            width: '90vw',
+            maxHeight: '80vh',
+        },
     },
     closeButton: {
         position: 'absolute',
