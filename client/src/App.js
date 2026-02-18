@@ -12,6 +12,8 @@ import {
   NotFoundPage,
   LoginPage,
   ReviewPage,
+  PrivacyPage,
+  TermsPage,
 } from './pages';
 import { Header, Modal } from './components';
 import theme from './theme';
@@ -197,6 +199,8 @@ function AppRoutes() {
         }}
       />
 
+      <Route exact path="/terms" component={TermsPage} />
+      <Route exact path="/privacy" component={PrivacyPage} />
       <Route path="/share/:id" component={SharePage} />
       <Route component={NotFoundPage} />
     </Switch>
