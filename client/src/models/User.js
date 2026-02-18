@@ -5,6 +5,7 @@ export default class User {
   constructor(raw) {
     this.id = raw.id;
     this.email = raw.email;
+    this.spikeEmailConsent = raw.spikeEmailConsent || false;
     this.timetables = raw.timetables.map(
       (timetable) => new Timetable(timetable, raw.bookmarks, raw.spikes),
     );
@@ -17,6 +18,7 @@ export default class User {
   static reportFeedback = async (feedback) => await Axios().post(`/user/feedback`, { feedback });
   static bookmarkLecture = async (id) => await Axios().post(`/user/bookmark/${id}`);
   static unbookmarkLecture = async (id) => await Axios().delete(`/user/bookmark/${id}`);
+  static consentSpikeEmail = async () => await Axios().post(`/user/spike/consent`);
   static addSpikeLecture = async (id) => await Axios().post(`/user/spike/${id}`);
   static deleteSpikeLecture = async (id) => await Axios().delete(`/user/spike/${id}`);
 }
