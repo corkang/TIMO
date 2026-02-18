@@ -239,12 +239,16 @@ const useStyles = makeStyles((theme) => ({
   // Spike page specific styles
   spikeNumColumn: {
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'flex-end',
+    alignItems: 'center',
     padding: '15px 10px',
     flexShrink: 0,
     gap: 4,
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column',
+      alignItems: 'flex-end',
+    },
   },
 
   spikeNumText: {
@@ -405,7 +409,14 @@ export default function LectureCard({
             const isFull = (lecture.curNum || 0) >= (lecture.maxNum || 0);
             const numColor = isFull ? '#D92929' : '#444444';
             return (
-                <Typography className={classes.spikeNumText} style={{ color: numColor }}>담은 인원 {lecture.curNum || 0} / 수강 정원 {lecture.maxNum || 0}</Typography>
+              <>
+                <Typography className={classes.spikeNumText} style={{ color: numColor }}>
+                  담은 인원 {lecture.curNum || 0}
+                </Typography>
+                <Typography className={classes.spikeNumText} style={{ color: numColor }}>
+                  / 수강 정원 {lecture.maxNum || 0}
+                </Typography>
+              </>
             );
           })()}
         </Box>
