@@ -17,7 +17,7 @@ export const Axios = () => {
         'content-type': 'application/json',
         ...(accessToken && { authorization: `Bearer ${accessToken}` }),
       },
-      timeout: 5000,
+      timeout: 15000,
       // withCredentials: true,
     });
   }

@@ -11,6 +11,7 @@ import {
   SharePage,
   NotFoundPage,
   LoginPage,
+  AdminPage,
   ReviewPage,
   PrivacyPage,
   TermsPage,
@@ -112,11 +113,18 @@ function AuthenticatedLayout({ children, logout }) {
 }
 
 function AppRoutes() {
-  const [authenticated, logout] = useAuth();
+  const [authenticated, logout, authLoading] = useAuth();
   const isProcessingToken = useTokenHandler();
 
   // While processing token, don't render routes to prevent redirect to login
   if (isProcessingToken) {
+    return null;
+  }
+
+  if (authLoading) {
+    // TODO(human): decide what to render while the auth check is in flight.
+    // Returning here prevents the brief "/login redirect → /timetable redirect"
+    // flash that happens when a user opens a protected URL (e.g. /admin) directly.
     return null;
   }
 
@@ -196,6 +204,15 @@ function AppRoutes() {
               <ReviewPage />
             </AuthenticatedLayout>
           );
+        }}
+      />
+
+      <Route
+        exact
+        path="/admin"
+        render={() => {
+          if (!authenticated) return <Redirect to="/login" />;
+          return <AdminPage logout={logout} />;
         }}
       />
 
