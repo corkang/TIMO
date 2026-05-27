@@ -1,5 +1,6 @@
 
 export { default as LoginPage } from './LoginPage';
+export { default as AdminPage } from './AdminPage';
 export { default as SharePage } from './SharePage';
 export { default as NotFoundPage } from './NotFoundPage';
 export { default as TimeTablePage } from './TimeTablePage';

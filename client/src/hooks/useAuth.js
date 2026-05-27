@@ -6,6 +6,7 @@ import { storage } from '../utils/storage';
 export default function useAuth() {
   const [cookies, setCookies, removeCookies] = useCookies('user');
   const [state, setState] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const logout = () => {
     storage.remove('accessToken');
@@ -17,8 +18,11 @@ export default function useAuth() {
       storage.set('accessToken', cookies.accessToken);
       removeCookies('accessToken');
     }
-    User.getAuth().then((res) => setState(res.data.authenticated));
+    User.getAuth()
+      .then((res) => setState(res.data.authenticated))
+      .catch(() => setState(false))
+      .finally(() => setLoading(false));
   }, [cookies.accessToken, removeCookies]);
 
-  return [state, logout];
+  return [state, logout, loading];
 }
